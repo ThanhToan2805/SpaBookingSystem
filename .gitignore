@@ -1,0 +1,19 @@
+# Backend ASP.NET
+bin/
+obj/
+*.user
+*.vs/
+*.nupkg
+
+# Frontend React
+frontend/node_modules/
+frontend/build/
+frontend/.env*
+
+# Python FastAPI
+services/**/venv/
+services/**/__pycache__/
+services/**/*.py[cod]
+
+# VS Code
+.vscode/
