@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SpaBooking.Contracts\SpaBooking.Contracts.csproj" />
     <ProjectReference Include="..\SpaBooking.Domain\SpaBooking.Domain.csproj" />
   </ItemGroup>
 
