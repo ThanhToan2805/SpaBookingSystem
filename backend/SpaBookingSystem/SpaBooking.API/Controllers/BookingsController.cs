@@ -23,18 +23,18 @@ namespace SpaBooking.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            var result = await _mediator.Send(new GetBookingByIdQuery { Id = id });
-            return result == null ? NotFound() : Ok(result);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingDto dto)
         {
             var result = await _mediator.Send(new CreateBookingCommand { Dto = dto });
             return Ok(result);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var result = await _mediator.Send(new GetBookingByIdQuery { Id = id });
+            return result == null ? NotFound() : Ok(result);
         }
 
         [HttpPut("{id:guid}")]

@@ -25,19 +25,19 @@ namespace SpaBooking.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateCategoryCommand cmd)
+        {
+            var id = await _mediator.Send(cmd);
+            return Ok(id);
+        }
+
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<CategoryDto>> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetCategoryByIdQuery { Id = id });
             if (result == null) return NotFound();
             return Ok(result);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateCategoryCommand cmd)
-        {
-            var id = await _mediator.Send(cmd);
-            return Ok(id);
         }
 
         [HttpPut("{id:guid}")]
