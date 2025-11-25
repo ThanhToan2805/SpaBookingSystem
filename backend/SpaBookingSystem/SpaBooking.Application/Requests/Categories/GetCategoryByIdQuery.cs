@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SpaBooking.Contracts.DTOs.Category;
+using SpaBooking.Contracts.DTOs.Categories;
 using System;
 
 namespace SpaBooking.Application.Requests.Categories

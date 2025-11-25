@@ -34,6 +34,13 @@ namespace SpaBooking.API.Controllers
             return Ok(res);
         }
 
+        [HttpGet("advanced")]
+        public async Task<IActionResult> GetAdvanced([FromQuery] GetServicesAdvancedQuery query)
+        {
+            var services = await _mediator.Send(query);
+            return Ok(services);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateServiceCommand cmd)
         {

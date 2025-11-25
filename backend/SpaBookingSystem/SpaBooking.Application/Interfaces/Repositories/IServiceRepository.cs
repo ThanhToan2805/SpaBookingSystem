@@ -10,6 +10,7 @@ namespace SpaBooking.Application.Interfaces.Repositories
         Task AddAsync(Service entity);
         Task<Service?> GetByIdAsync(Guid id);
         Task<List<Service>> GetAllAsync();
+        IQueryable<Service> Query();
         Task UpdateAsync(Service entity);
         Task DeleteAsync(Service entity);
     }

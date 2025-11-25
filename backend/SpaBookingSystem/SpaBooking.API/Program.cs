@@ -1,9 +1,9 @@
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SpaBooking.Application.Interfaces.Repositories;
-using SpaBooking.Application.Requests.Services;
-using SpaBooking.Application.Validators.Services;
+using SpaBooking.Application;
+using SpaBooking.Application.Behaviors;
 using SpaBooking.Persistence.Contexts;
 using SpaBooking.Persistence.Repositories;
 
@@ -19,10 +19,30 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SpaBookingDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register Validators & MediatR & DI
-builder.Services.AddMediatR(typeof(CreateServiceCommand).Assembly);
-builder.Services.AddValidatorsFromAssembly(typeof(CreateServiceValidator).Assembly);
-builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+// Register Validators & MediatR
+builder.Services.AddMediatR(typeof(ApplicationMarker).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(ApplicationMarker).Assembly);
+
+// Register Repositories using Scrutor
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<ServiceRepository>()
+    .AddClasses(classes => classes.Where(t => t.Name.EndsWith("Repository")))
+    .AsImplementedInterfaces()
+    .WithScopedLifetime()
+);
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", p =>
+        p.AllowAnyOrigin()
+         .AllowAnyHeader()
+         .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -32,6 +52,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 

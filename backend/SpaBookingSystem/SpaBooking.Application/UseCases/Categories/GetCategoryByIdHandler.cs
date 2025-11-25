@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SpaBooking.Application.Interfaces.Repositories;
 using SpaBooking.Application.Requests.Categories;
-using SpaBooking.Contracts.DTOs.Category;
+using SpaBooking.Contracts.DTOs.Categories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

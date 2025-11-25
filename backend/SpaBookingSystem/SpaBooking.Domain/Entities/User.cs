@@ -8,9 +8,13 @@
         public string PasswordHash { get; set; } = null!;
         public Guid RoleId { get; set; }
         public Role Role { get; set; } = null!;
-        // Optional profile fields
+
         public string? FullName { get; set; }
         public string? PhoneNumber { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation
+        public Staff? StaffProfile { get; set; }  // nếu user là staff
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

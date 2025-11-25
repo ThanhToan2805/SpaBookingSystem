@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SpaBooking.Application.Requests.Categories;
-using SpaBooking.Contracts.DTOs.Category;
+using SpaBooking.Contracts.DTOs.Categories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

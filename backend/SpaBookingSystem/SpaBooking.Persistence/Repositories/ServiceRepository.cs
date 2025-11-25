@@ -39,6 +39,11 @@ namespace SpaBooking.Persistence.Repositories
             return await _db.Services.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public IQueryable<Service> Query()
+        {
+            return _db.Services.AsNoTracking();
+        }
+
         public async Task UpdateAsync(Service entity)
         {
             _db.Services.Update(entity);

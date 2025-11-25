@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpaBooking.Contracts.DTOs.Category
+namespace SpaBooking.Contracts.DTOs.Categories
 {
     public class CategoryDto
     {

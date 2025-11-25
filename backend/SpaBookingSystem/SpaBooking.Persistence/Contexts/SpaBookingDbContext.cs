@@ -10,53 +10,166 @@ namespace SpaBooking.Persistence.Contexts
 
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Service> Services { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Service> Services { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Example: cấu hình Role.Name required + length
+            // -----------------------
+            // Role
+            // -----------------------
             modelBuilder.Entity<Role>(b =>
             {
                 b.HasKey(r => r.Id);
                 b.Property(r => r.Name).IsRequired().HasMaxLength(50);
+                b.Property(r => r.Description).HasMaxLength(200);
             });
 
+            // -----------------------
+            // User
+            // -----------------------
             modelBuilder.Entity<User>(b =>
             {
                 b.HasKey(u => u.Id);
                 b.Property(u => u.Username).IsRequired().HasMaxLength(100);
                 b.Property(u => u.Email).IsRequired().HasMaxLength(200);
-                b.HasOne(u => u.Role).WithMany(r => r.Users).HasForeignKey(u => u.RoleId);
+                b.Property(u => u.PasswordHash).IsRequired();
+                b.HasOne(u => u.Role)
+                 .WithMany(r => r.Users)
+                 .HasForeignKey(u => u.RoleId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                // Unique constraints
+                b.HasIndex(u => u.Username).IsUnique();
+                b.HasIndex(u => u.Email).IsUnique();
             });
 
+            // -----------------------
+            // Category
+            // -----------------------
+            modelBuilder.Entity<Category>(b =>
+            {
+                b.HasKey(c => c.Id);
+                b.Property(c => c.Name).IsRequired().HasMaxLength(100);
+                b.Property(c => c.Description).HasMaxLength(500);
+            });
+
+            // -----------------------
+            // Service
+            // -----------------------
             modelBuilder.Entity<Service>(b =>
             {
                 b.HasKey(s => s.Id);
                 b.Property(s => s.Name).IsRequired().HasMaxLength(200);
                 b.Property(s => s.Price).HasColumnType("numeric(12,2)");
+                b.Property(s => s.DurationMinutes).IsRequired();
+                b.Property(s => s.ImageUrl).HasMaxLength(500);
                 b.HasOne(s => s.Category)
                  .WithMany(c => c.Services)
                  .HasForeignKey(s => s.CategoryId)
                  .OnDelete(DeleteBehavior.Restrict);
             });
 
-            modelBuilder.Entity<Booking>(b =>
+            // -----------------------
+            // Staff
+            // -----------------------
+            modelBuilder.Entity<Staff>(b =>
             {
-                b.HasKey(x => x.Id);
-                b.HasOne(x => x.Service).WithMany().HasForeignKey(x => x.ServiceId);
-                b.HasOne(x => x.Customer).WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
-                b.HasOne(x => x.Staff).WithMany().HasForeignKey(x => x.StaffId).OnDelete(DeleteBehavior.SetNull);
-                b.Property(x => x.Status).HasConversion<string>().HasMaxLength(50);
+                b.HasKey(s => s.Id);
+                b.Property(s => s.Position).IsRequired().HasMaxLength(100);
+                b.Property(s => s.IsAvailable).IsRequired();
+
+                b.HasOne(s => s.User)
+                 .WithOne(u => u.StaffProfile)
+                 .HasForeignKey<Staff>(s => s.UserId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasIndex(s => s.UserId).IsUnique(); // 1-1 User-Staff
             });
 
-            // Additional indexes
-            modelBuilder.Entity<Booking>().HasIndex(b => new { b.StartAt, b.StaffId });
+            // -----------------------
+            // TimeSlot
+            // -----------------------
+            modelBuilder.Entity<TimeSlot>(b =>
+            {
+                b.HasKey(t => t.Id);
+                b.Property(t => t.StartAt).IsRequired();
+                b.Property(t => t.EndAt).IsRequired();
+                b.Property(t => t.IsAvailable).IsRequired();
+
+                b.HasOne(t => t.Staff)
+                 .WithMany(s => s.TimeSlots)
+                 .HasForeignKey(t => t.StaffId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasOne(t => t.Booking)
+                 .WithMany(bk => bk.TimeSlots)
+                 .HasForeignKey(t => t.BookingId)
+                 .OnDelete(DeleteBehavior.SetNull);
+
+                // Unique constraint để tránh trùng slot
+                b.HasIndex(t => new { t.StaffId, t.StartAt, t.EndAt }).IsUnique();
+            });
+
+            // -----------------------
+            // Booking
+            // -----------------------
+            modelBuilder.Entity<Booking>(b =>
+            {
+                b.HasKey(bk => bk.Id);
+                b.Property(bk => bk.StartAt).IsRequired();
+                b.Property(bk => bk.EndAt).IsRequired();
+                b.Property(bk => bk.Status).HasConversion<string>().HasMaxLength(50);
+                b.Property(bk => bk.Note).HasMaxLength(500);
+
+                b.HasOne(bk => bk.Customer)
+                 .WithMany(u => u.Bookings)
+                 .HasForeignKey(bk => bk.CustomerId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                b.HasOne(bk => bk.Service)
+                 .WithMany()
+                 .HasForeignKey(bk => bk.ServiceId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                b.HasOne(bk => bk.Staff)
+                 .WithMany(s => s.Bookings)
+                 .HasForeignKey(bk => bk.StaffId)
+                 .OnDelete(DeleteBehavior.SetNull);
+
+                // Index hỗ trợ kiểm tra overlap
+                b.HasIndex(bk => new { bk.StartAt, bk.StaffId });
+
+                // Check constraint: EndAt > StartAt
+                b.ToTable(tb =>
+                {
+                    tb.HasCheckConstraint("CK_Booking_EndAt", "\"EndAt\" > \"StartAt\"");
+                });
+            });
+
+            // -----------------------
+            // Payment
+            // -----------------------
+            modelBuilder.Entity<Payment>(b =>
+            {
+                b.HasKey(p => p.Id);
+                b.Property(p => p.Amount).HasColumnType("numeric(12,2)").IsRequired();
+                b.Property(p => p.PaymentMethod).IsRequired().HasMaxLength(50);
+                b.Property(p => p.Status).HasConversion<string>().HasMaxLength(50).IsRequired();
+                b.Property(p => p.PaidAt);
+                b.Property(p => p.CreatedAt).IsRequired();
+
+                b.HasOne(p => p.Booking)
+                 .WithMany(bk => bk.Payments)
+                 .HasForeignKey(p => p.BookingId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }
