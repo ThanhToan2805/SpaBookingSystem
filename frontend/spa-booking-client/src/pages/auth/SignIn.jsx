@@ -1,0 +1,75 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
+import LayoutWrapper from "../../components/Layout/LayoutWrapper";
+import EyeIcon from "../../components/icons/EyeIcon";
+import EyeOffIcon from "../../components/icons/EyeOffIcon";
+
+export default function SignIn() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onSubmit = async (data) => {
+    console.log("Submitting login:", data);
+    try {
+      await login({
+        EmailOrUsername: data.username,
+        Password: data.password,
+      });
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Login failed: " + (err.response?.data?.message || err.message));
+    }
+  };
+
+  return (
+    <LayoutWrapper>
+      <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
+        <h2 className="text-3xl font-bold mb-6 text-center text-purple-600">Sign In</h2>
+        <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
+          {/* Username input */}
+          <input
+            {...register("username")}
+            placeholder="Username"
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+
+          {/* Password input with toggle */}
+          <div className="relative">
+            <input
+              {...register("password")}
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="border border-gray-300 p-3 rounded-lg w-full pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className="bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-gray-600">
+          Don't have an account?{" "}
+          <Link to="/auth/signup" className="text-purple-600 font-medium hover:underline">
+            Sign Up
+          </Link>
+        </p>
+      </div>
+    </LayoutWrapper>
+  );
+}

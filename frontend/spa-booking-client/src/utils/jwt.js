@@ -1,0 +1,33 @@
+// Lấy token từ localStorage
+export function getToken() {
+  return localStorage.getItem("token");
+}
+
+// Lưu token vào localStorage
+export function setToken(token) {
+  localStorage.setItem("token", token);
+}
+
+// Xóa token khỏi localStorage
+export function removeToken() {
+  localStorage.removeItem("token");
+}
+
+// Decode JWT payload
+export function decodeToken(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+// Kiểm tra token còn hợp lệ không
+export function isTokenValid(token) {
+  if (!token) return false;
+  const payload = decodeToken(token);
+  if (!payload) return false;
+  const now = Math.floor(Date.now() / 1000);
+  return payload.exp && payload.exp > now;
+}
