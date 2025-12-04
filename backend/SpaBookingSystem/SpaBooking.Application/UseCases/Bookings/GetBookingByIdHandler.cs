@@ -25,6 +25,8 @@ namespace SpaBooking.Application.UseCases.Bookings
                 CustomerId = b.CustomerId,
                 ServiceId = b.ServiceId,
                 StaffId = b.StaffId,
+                PromotionId = b.PromotionId,
+                FinalPrice = b.FinalPrice,
                 StartAt = b.StartAt,
                 EndAt = b.EndAt,
                 Status = b.Status.ToString(),

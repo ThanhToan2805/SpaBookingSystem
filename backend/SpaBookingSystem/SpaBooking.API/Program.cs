@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SpaBooking.Application;
 using SpaBooking.Application.Behaviors;
 using SpaBooking.Application.Interfaces.Repositories;
+using SpaBooking.Application.Common;
 using SpaBooking.Persistence.Contexts;
 using SpaBooking.Persistence.Repositories;
 using SpaBooking.Persistence.Services;
@@ -76,6 +77,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient<BookingValidationService>();
 
 builder.Services.AddCors(options =>
 {

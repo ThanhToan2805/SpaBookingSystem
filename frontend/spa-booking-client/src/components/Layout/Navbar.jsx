@@ -59,6 +59,7 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg overflow-hidden z-50 animate-fadeIn">
                     {[
                       { label: "Thông tin cá nhân", to: "/profile", type: "link" },
+                      { label: "Các lịch đã đặt", to: "/my-bookings", type: "link" },
                       { label: "Đổi mật khẩu", to: "/change-password", type: "link" },
                       { label: "Đăng xuất", type: "button", onClick: () => logout() },
                     ].map((item, idx) =>

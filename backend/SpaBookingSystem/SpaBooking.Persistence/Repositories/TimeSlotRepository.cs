@@ -25,7 +25,7 @@ namespace SpaBooking.Persistence.Repositories
 
         public async Task UpdateAsync(TimeSlot entity)
         {
-            _db.TimeSlots.Update(entity);
+            _db.Entry(entity).State = EntityState.Modified;
             await _db.SaveChangesAsync();
         }
 

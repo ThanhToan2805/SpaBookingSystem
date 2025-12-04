@@ -16,6 +16,7 @@ namespace SpaBooking.Persistence.Contexts
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -118,6 +119,23 @@ namespace SpaBooking.Persistence.Contexts
             });
 
             // -----------------------
+            // Promotion
+            // -----------------------
+            modelBuilder.Entity<Promotion>(b =>
+            {
+                b.HasKey(p => p.Id);
+                b.Property(p => p.Name).IsRequired().HasMaxLength(200);
+                b.Property(p => p.DiscountPercent).IsRequired();
+                b.Property(p => p.IsActive).IsRequired();
+
+                // Relationship với Booking
+                b.HasMany(p => p.Bookings)
+                 .WithOne(bk => bk.Promotion)
+                 .HasForeignKey(bk => bk.PromotionId)
+                 .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // -----------------------
             // Booking
             // -----------------------
             modelBuilder.Entity<Booking>(b =>
@@ -127,6 +145,15 @@ namespace SpaBooking.Persistence.Contexts
                 b.Property(bk => bk.EndAt).IsRequired();
                 b.Property(bk => bk.Status).HasConversion<string>().HasMaxLength(50);
                 b.Property(bk => bk.Note).HasMaxLength(500);
+
+                b.Property(bk => bk.FinalPrice)
+                 .HasColumnType("numeric(12,2)")
+                 .IsRequired();
+
+                b.HasOne(bk => bk.Promotion)
+                 .WithMany(p => p.Bookings)
+                 .HasForeignKey(bk => bk.PromotionId)
+                 .OnDelete(DeleteBehavior.SetNull);
 
                 b.HasOne(bk => bk.Customer)
                  .WithMany(u => u.Bookings)

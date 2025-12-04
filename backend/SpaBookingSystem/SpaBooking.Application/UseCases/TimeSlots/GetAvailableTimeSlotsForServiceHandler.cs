@@ -25,7 +25,7 @@ namespace SpaBooking.Application.UseCases.TimeSlots
 
         public async Task<List<TimeSlotDto>> Handle(GetAvailableTimeSlotsForServiceQuery request, CancellationToken cancellationToken)
         {
-            // 1️⃣ Lấy staff
+            // Lấy staff
             var staff = await _staffRepository.Query()
                 .Include(s => s.TimeSlots)
                 .Include(s => s.User)
@@ -33,7 +33,7 @@ namespace SpaBooking.Application.UseCases.TimeSlots
 
             if (staff == null) return new List<TimeSlotDto>();
 
-            // 2️⃣ Lọc slot rảnh trong khoảng StartAt → EndAt
+            // Lọc slot rảnh trong khoảng StartAt → EndAt
             var availableSlots = staff.TimeSlots
                 .Where(ts =>
                     ts.IsAvailable &&

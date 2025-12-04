@@ -22,7 +22,7 @@ namespace SpaBooking.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Booking", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,9 +37,15 @@ namespace SpaBooking.Persistence.Migrations
                     b.Property<DateTime>("EndAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("FinalPrice")
+                        .HasColumnType("numeric(12,2)");
+
                     b.Property<string>("Note")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<Guid?>("PromotionId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uuid");
@@ -59,6 +65,8 @@ namespace SpaBooking.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("PromotionId");
+
                     b.HasIndex("ServiceId");
 
                     b.HasIndex("StaffId");
@@ -71,7 +79,27 @@ namespace SpaBooking.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Payment", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +134,39 @@ namespace SpaBooking.Persistence.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Role", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Promotion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal?>("DiscountAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal?>("DiscountPercent")
+                        .IsRequired()
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("EndAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("StartAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promotions");
+                });
+
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,26 +184,6 @@ namespace SpaBooking.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("SpaBooking.Domain.Entities.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("SpaBooking.Domain.Entities.Service", b =>
@@ -183,7 +223,7 @@ namespace SpaBooking.Persistence.Migrations
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("Staff", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Staff", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -208,7 +248,7 @@ namespace SpaBooking.Persistence.Migrations
                     b.ToTable("Staffs");
                 });
 
-            modelBuilder.Entity("TimeSlot", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.TimeSlot", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -239,7 +279,7 @@ namespace SpaBooking.Persistence.Migrations
                     b.ToTable("TimeSlots");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,13 +324,18 @@ namespace SpaBooking.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Booking", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Booking", b =>
                 {
-                    b.HasOne("User", "Customer")
+                    b.HasOne("SpaBooking.Domain.Entities.User", "Customer")
                         .WithMany("Bookings")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SpaBooking.Domain.Entities.Promotion", "Promotion")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SpaBooking.Domain.Entities.Service", "Service")
                         .WithMany()
@@ -298,21 +343,23 @@ namespace SpaBooking.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Staff", "Staff")
+                    b.HasOne("SpaBooking.Domain.Entities.Staff", "Staff")
                         .WithMany("Bookings")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Customer");
 
+                    b.Navigation("Promotion");
+
                     b.Navigation("Service");
 
                     b.Navigation("Staff");
                 });
 
-            modelBuilder.Entity("Payment", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Payment", b =>
                 {
-                    b.HasOne("Booking", "Booking")
+                    b.HasOne("SpaBooking.Domain.Entities.Booking", "Booking")
                         .WithMany("Payments")
                         .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -332,25 +379,25 @@ namespace SpaBooking.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Staff", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Staff", b =>
                 {
-                    b.HasOne("User", "User")
+                    b.HasOne("SpaBooking.Domain.Entities.User", "User")
                         .WithOne("StaffProfile")
-                        .HasForeignKey("Staff", "UserId")
+                        .HasForeignKey("SpaBooking.Domain.Entities.Staff", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TimeSlot", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.TimeSlot", b =>
                 {
-                    b.HasOne("Booking", "Booking")
+                    b.HasOne("SpaBooking.Domain.Entities.Booking", "Booking")
                         .WithMany("TimeSlots")
                         .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Staff", "Staff")
+                    b.HasOne("SpaBooking.Domain.Entities.Staff", "Staff")
                         .WithMany("TimeSlots")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -361,9 +408,9 @@ namespace SpaBooking.Persistence.Migrations
                     b.Navigation("Staff");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Role", "Role")
+                    b.HasOne("SpaBooking.Domain.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -372,16 +419,11 @@ namespace SpaBooking.Persistence.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Booking", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Booking", b =>
                 {
                     b.Navigation("Payments");
 
                     b.Navigation("TimeSlots");
-                });
-
-            modelBuilder.Entity("Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("SpaBooking.Domain.Entities.Category", b =>
@@ -389,14 +431,24 @@ namespace SpaBooking.Persistence.Migrations
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("Staff", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Promotion", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("SpaBooking.Domain.Entities.Staff", b =>
                 {
                     b.Navigation("Bookings");
 
                     b.Navigation("TimeSlots");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("SpaBooking.Domain.Entities.User", b =>
                 {
                     b.Navigation("Bookings");
 

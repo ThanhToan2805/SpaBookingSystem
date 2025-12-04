@@ -14,6 +14,11 @@
         public Guid? StaffId { get; set; }          // optional: có thể chọn staff
         public Staff? Staff { get; set; }
 
+        public Guid? PromotionId { get; set; }      // optional
+        public Promotion? Promotion { get; set; }
+
+        public decimal FinalPrice { get; set; }      // sau khi áp dụng khuyến mãi
+
         public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
 

@@ -28,7 +28,7 @@ namespace SpaBooking.Persistence.Repositories
 
         public async Task UpdateAsync(Booking entity)
         {
-            _db.Bookings.Update(entity);
+            _db.Entry(entity).State = EntityState.Modified;
             await _db.SaveChangesAsync();
         }
 
@@ -36,6 +36,17 @@ namespace SpaBooking.Persistence.Repositories
         {
             _db.Bookings.Remove(entity);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<bool> HasConflictAsync(Guid staffId, DateTime startAt, DateTime endAt)
+        {
+            return await _db.Bookings
+                .AnyAsync(b =>
+                    b.StaffId == staffId &&
+                    b.StartAt < endAt &&
+                    b.EndAt > startAt &&
+                    b.Status != BookingStatus.Cancelled
+                );
         }
     }
 }

@@ -9,5 +9,6 @@ namespace SpaBooking.Application.Interfaces.Repositories
         Task AddAsync(Booking entity);
         Task UpdateAsync(Booking entity);
         Task DeleteAsync(Booking entity);
+        Task<bool> HasConflictAsync(Guid staffId, DateTime startAt, DateTime endAt);
     }
 }
