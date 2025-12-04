@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpaBooking.Application.Requests.Users;
 
@@ -35,6 +36,19 @@ namespace SpaBooking.API.Controllers
                 // Trả về 400 Bad Request nếu login thất bại
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            // Lấy UserId từ JWT claim
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null) return Unauthorized();
+            command.UserId = Guid.Parse(userIdClaim.Value);
+
+            await _mediator.Send(command);
+            return NoContent();
         }
     }
 }

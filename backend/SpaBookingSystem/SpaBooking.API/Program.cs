@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SpaBooking.Application;
 using SpaBooking.Application.Behaviors;
-using SpaBooking.Application.Interfaces.Repositories;
 using SpaBooking.Application.Common;
 using SpaBooking.Persistence.Contexts;
 using SpaBooking.Persistence.Repositories;
 using SpaBooking.Persistence.Services;
+using SpaBooking.Infrastructure;
 using System.Text;
+using SpaBooking.Application.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,12 @@ builder.Services.AddSwaggerGen(options =>
             new string[] {}
         }
     });
+
+    options.MapType<IFormFile>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+    {
+        Type = "string",
+        Format = "binary"
+    });
 });
 
 // Add DbContext
@@ -73,6 +80,9 @@ builder.Services.Scan(scan => scan
 
 // Register Services
 builder.Services.AddScoped<IJwtService, JwtService>();
+
+// Add Infrastructure (e.g., Cloudinary)
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();

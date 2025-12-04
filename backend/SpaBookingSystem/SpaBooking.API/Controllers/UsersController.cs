@@ -5,7 +5,7 @@ using SpaBooking.Application.Requests.Users;
 
 namespace SpaBooking.API.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -18,6 +18,13 @@ namespace SpaBooking.API.Controllers
         {
             var result = await _mediator.Send(new GetAllUsersQuery());
             return Ok(result);
+        }
+
+        [HttpPost] // Create user
+        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
+        {
+            var id = await _mediator.Send(command);
+            return Ok(new { UserId = id });
         }
 
         [HttpGet("profile")]
@@ -42,6 +49,21 @@ namespace SpaBooking.API.Controllers
             );
 
             return Ok(result);
+        }
+
+        [HttpPut("{id}")] // Update user
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserCommand cmd)
+        {
+            cmd.Id = id;
+            await _mediator.Send(cmd);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")] // Delete user
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _mediator.Send(new DeleteUserCommand { Id = id });
+            return NoContent();
         }
     }
 }

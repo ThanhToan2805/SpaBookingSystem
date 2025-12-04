@@ -1,6 +1,6 @@
 ﻿using SpaBooking.Domain.Entities;
 
-namespace SpaBooking.Application.Interfaces.Repositories
+namespace SpaBooking.Application.Interfaces.Services
 {
     public interface IJwtService
     {

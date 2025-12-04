@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SpaBooking.Application.Interfaces;
-using SpaBooking.Application.Interfaces.Repositories;
+using SpaBooking.Application.Interfaces.Services;
 using SpaBooking.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

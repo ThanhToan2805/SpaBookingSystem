@@ -73,6 +73,13 @@ namespace SpaBooking.API.Controllers
             return success ? Ok() : NotFound();
         }
 
+        [HttpPut("{id}/confirm")]
+        public async Task<IActionResult> ConfirmBooking(Guid id)
+        {
+            var result = await _mediator.Send(new ConfirmBookingCommand(id));
+            return Ok(result);
+        }
+
         [HttpPost("{id:guid}/noshow")]
         public async Task<IActionResult> SetNoShow(Guid id, [FromBody] string? note = null)
         {

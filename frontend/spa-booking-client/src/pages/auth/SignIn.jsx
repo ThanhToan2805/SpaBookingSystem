@@ -13,13 +13,19 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log("Submitting login:", data);
     try {
-      await login({
+      const userData = await login({
         EmailOrUsername: data.username,
         Password: data.password,
       });
-      navigate("/");
+
+      const role = userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+      if (role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.error("Login error:", err);
       alert("Login failed: " + (err.response?.data?.message || err.message));

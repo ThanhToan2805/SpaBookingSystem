@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SpaBooking.Application.Interfaces;
 using SpaBooking.Application.Interfaces.Repositories;
+using SpaBooking.Application.Interfaces.Services;
 using SpaBooking.Application.Requests.Users;
 using BC = BCrypt.Net.BCrypt;
 

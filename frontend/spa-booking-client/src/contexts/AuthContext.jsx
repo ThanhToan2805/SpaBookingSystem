@@ -18,11 +18,15 @@ export default function AuthProvider({ children }) {
 
     const login = async ({ EmailOrUsername, Password }) => {
         const res = await authApi.login({ EmailOrUsername, Password });
+
         const token = res.token; // match với BE
         console.log("Raw token:", token);
+
         localStorage.setItem("token", token);
+
         const userData = decodeToken(token);
-        console.log("Decoded user:", userData)
+        console.log("Decoded user:", userData);
+
         setUser(userData);
         return userData;
     };
