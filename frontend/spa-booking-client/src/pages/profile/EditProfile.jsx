@@ -32,6 +32,7 @@ export default function EditProfile() {
       <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-8">
         <h2 className="text-3xl font-bold mb-6 text-center">Edit Profile</h2>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <input {...register("username")} placeholder="Username" className="border p-2 rounded"/>
           <input {...register("fullName")} placeholder="Full Name" className="border p-2 rounded"/>
           <input {...register("email")} placeholder="Email" className="border p-2 rounded"/>
           <input {...register("phoneNumber")} placeholder="Phone Number" className="border p-2 rounded"/>

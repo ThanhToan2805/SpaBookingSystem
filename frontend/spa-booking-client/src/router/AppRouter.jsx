@@ -12,6 +12,9 @@ import Profile from "../pages/profile/Profile";
 import EditProfile from "../pages/profile/EditProfile";
 import CategoriesList from "../pages/categories/CategoriesList";
 import StaffList from "../pages/staffs/StaffList";
+import ChangePassword from "../pages/auth/ChangePassword";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
 
 // Admin pages
 import Dashboard from "../pages/admin/Dashboard";
@@ -43,6 +46,8 @@ export default function AppRouter() {
         <Route path="/services/:id" element={<ServiceDetail />} />
         <Route path="/categories" element={<CategoriesList />} />
         <Route path="/staffs" element={<StaffList />} />
+        <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+        <Route path="/auth/reset-password" element={<ResetPassword />} />
 
         {/* USER PRIVATE ROUTES */}
         <Route
@@ -60,6 +65,10 @@ export default function AppRouter() {
         <Route
           path="/profile/edit"
           element={<PrivateRoute><EditProfile /></PrivateRoute>}
+        />
+        <Route
+          path="/auth/change-password"
+          element={<PrivateRoute><ChangePassword /></PrivateRoute>}
         />
 
         {/* ADMIN ROUTES */}

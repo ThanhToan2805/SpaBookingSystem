@@ -15,6 +15,10 @@
 
         // Navigation
         public Staff? StaffProfile { get; set; }  // nếu user là staff
+
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+        public ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = new List<PasswordResetToken>();
+
     }
 }

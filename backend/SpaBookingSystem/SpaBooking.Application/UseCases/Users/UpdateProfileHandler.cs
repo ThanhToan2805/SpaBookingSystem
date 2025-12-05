@@ -19,8 +19,18 @@ namespace SpaBooking.Application.UseCases.Users
             var user = await _repo.GetByIdAsync(request.UserId)
                        ?? throw new Exception("User not found");
 
+            var existingUsername = await _repo.GetByUsernameAsync(request.Username);
+            if (existingUsername != null && existingUsername.Id != user.Id)
+                throw new Exception("Username already exists");
+
+            var existingEmail = await _repo.GetByEmailAsync(request.Email);
+            if (existingEmail != null && existingEmail.Id != user.Id)
+                throw new Exception("Email already exists");
+
             // Update fields
+            user.Username = request.Username;
             user.FullName = request.FullName;
+            user.Email = request.Email;
             user.PhoneNumber = request.PhoneNumber;
 
             await _repo.SaveChangesAsync();

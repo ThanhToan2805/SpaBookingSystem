@@ -17,6 +17,7 @@ namespace SpaBooking.Persistence.Contexts
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -196,6 +197,24 @@ namespace SpaBooking.Persistence.Contexts
                  .WithMany(bk => bk.Payments)
                  .HasForeignKey(p => p.BookingId)
                  .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ---- PasswordResetToken ----
+            modelBuilder.Entity<PasswordResetToken>(b =>
+            {
+                b.HasKey(t => t.Id);
+
+                b.Property(t => t.Token).IsRequired().HasMaxLength(200);
+                b.Property(t => t.Expiration).IsRequired();
+                b.Property(t => t.IsUsed).IsRequired();
+                b.Property(t => t.CreatedAt).IsRequired();
+
+                b.HasOne(t => t.User)
+                 .WithMany(u => u.PasswordResetTokens)
+                 .HasForeignKey(t => t.UserId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasIndex(t => t.Token).IsUnique(); // đảm bảo token duy nhất
             });
         }
     }

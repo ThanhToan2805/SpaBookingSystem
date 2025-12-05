@@ -35,18 +35,6 @@ namespace SpaBooking.Application.Common
             return errors;
         }
 
-        // Kiểm tra duration chia hết 30 phút
-        public List<string> ValidateDuration(DateTime startAt, DateTime endAt, int slotMinutes = 30)
-        {
-            var errors = new List<string>();
-            var durationMinutes = (endAt - startAt).TotalMinutes;
-
-            if (durationMinutes % slotMinutes != 0)
-                errors.Add($"Khoảng thời gian phải là bội số {slotMinutes} phút.");
-
-            return errors;
-        }
-
         // Kiểm tra trùng với slot đã có
         public async Task<bool> HasOverlappingSlotAsync(
             Guid staffId,

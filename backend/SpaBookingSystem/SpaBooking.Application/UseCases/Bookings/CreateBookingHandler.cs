@@ -74,7 +74,6 @@ namespace SpaBooking.Application.UseCases.Bookings
             // Validate thời gian
             var errors = _validation.ValidateTimeRange(startLocal, endLocal);
             errors.AddRange(_validation.ValidateWorkingHours(startLocal, endLocal));
-            errors.AddRange(_validation.ValidateDuration(startLocal, endLocal));
 
             if (errors.Any())
                 throw new Exception(string.Join("; ", errors));

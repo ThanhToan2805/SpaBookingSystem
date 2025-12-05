@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function CategoryCard({ category }) {
   return (
     <Link
-      to={`/services?category=${category.id}`}
+      to={`/services?categoryId=${category.id}`}
       className="relative bg-white rounded-xl shadow-md p-6 flex flex-col justify-between transform transition duration-300 hover:scale-105 hover:shadow-2xl group overflow-hidden"
     >
       {/* Decorative gradient overlay */}

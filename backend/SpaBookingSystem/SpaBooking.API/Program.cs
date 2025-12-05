@@ -1,18 +1,19 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SpaBooking.Application;
 using SpaBooking.Application.Behaviors;
 using SpaBooking.Application.Common;
+using SpaBooking.Application.Interfaces.Services;
+using SpaBooking.Infrastructure;
+using SpaBooking.Infrastructure.Services;
 using SpaBooking.Persistence.Contexts;
 using SpaBooking.Persistence.Repositories;
 using SpaBooking.Persistence.Services;
-using SpaBooking.Infrastructure;
 using System.Text;
-using SpaBooking.Application.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,6 +81,7 @@ builder.Services.Scan(scan => scan
 
 // Register Services
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 // Add Infrastructure (e.g., Cloudinary)
 builder.Services.AddInfrastructure(builder.Configuration);

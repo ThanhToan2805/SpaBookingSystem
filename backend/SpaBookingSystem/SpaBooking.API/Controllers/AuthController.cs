@@ -50,5 +50,19 @@ namespace SpaBooking.API.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent(); // trả về 204 nếu gửi email thành công
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent(); // 204 nếu reset thành công
+        }
     }
 }

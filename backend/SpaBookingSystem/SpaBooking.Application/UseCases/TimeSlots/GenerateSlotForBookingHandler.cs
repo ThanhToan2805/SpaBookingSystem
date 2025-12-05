@@ -24,7 +24,7 @@ namespace SpaBooking.Application.UseCases.TimeSlots
         public async Task<List<TimeSlotGroupDto>> Handle(GenerateSlotForBookingCommand request, CancellationToken cancellationToken)
         {
             var slotDuration = TimeSpan.FromMinutes(30);
-            var slotsNeeded = (int)Math.Ceiling(request.ServiceDurationMinutes / 30.0);
+            var slotsNeeded = request.ServiceDurationMinutes;
 
             var workStart = request.DesiredDate.Date.AddHours(9);
             var workEnd = request.DesiredDate.Date.AddHours(17);

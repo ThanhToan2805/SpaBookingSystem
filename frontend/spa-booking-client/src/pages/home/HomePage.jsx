@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import LayoutWrapper from "../../components/Layout/LayoutWrapper";
+import { Link } from "react-router-dom";
 import { serviceApi } from "../../api/serviceApi";
 import { categoryApi } from "../../api/categoryApi";
 import ServiceCard from "../../components/UI/ServiceCard";
@@ -46,6 +47,15 @@ export default function Home() {
               <CategoryCard key={cat.id} category={cat} />
             ))}
           </div>
+
+          <div className="text-center mt-8">
+            <Link
+              to="/categories"
+              className="inline-block bg-purple-600 text-white py-3 px-6 rounded-full font-medium hover:bg-purple-700 transition shadow"
+            >
+              View All Categories
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -59,6 +69,15 @@ export default function Home() {
             {services.slice(0, 6).map(s => (
               <ServiceCard key={s.id} service={s} />
             ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link
+              to="/services"
+              className="inline-block bg-purple-600 text-white py-3 px-6 rounded-full font-medium hover:bg-purple-700 transition shadow"
+            >
+              View All Services
+            </Link>
           </div>
         </div>
       </section>

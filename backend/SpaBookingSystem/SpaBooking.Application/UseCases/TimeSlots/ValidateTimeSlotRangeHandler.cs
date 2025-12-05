@@ -29,7 +29,6 @@ namespace SpaBooking.Application.UseCases.TimeSlots
 
             var errors = _validation.ValidateTimeRange(request.StartAt, request.EndAt);
             errors.AddRange(_validation.ValidateWorkingHours(request.StartAt, request.EndAt));
-            errors.AddRange(_validation.ValidateDuration(request.StartAt, request.EndAt));
 
             var overlapping = await _validation.HasOverlappingSlotAsync(request.StaffId, request.StartAt, request.EndAt, _timeSlotRepository.Query());
             if (overlapping)

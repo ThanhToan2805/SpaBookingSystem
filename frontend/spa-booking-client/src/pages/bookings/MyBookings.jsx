@@ -3,43 +3,47 @@ import LayoutWrapper from "../../components/Layout/LayoutWrapper";
 import { bookingApi } from "../../api/bookingApi";
 import BookingCard from "../../components/UI/BookingCard";
 import Modal from "../../components/UI/Modal";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function MyBookings() {
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
 
-  // Modal state
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
-  // Data for modals
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [newStartAt, setNewStartAt] = useState("");
   const [cancelReason, setCancelReason] = useState("");
 
   useEffect(() => {
-    reload();
-  }, []);
+    if (user) reload();
+  }, [user]);
 
   const reload = async () => {
-    const data = await bookingApi.getAll();
-    setBookings(data);
+    try {
+      const all = await bookingApi.getAll();
+
+      const my = all.filter(b => b.CustomerId === user.id);
+
+      setBookings(my);
+    } catch (err) {
+      console.error("Lỗi load booking:", err);
+    }
   };
 
-  // Mở modal reschedule
   const handleReschedule = (booking) => {
     setSelectedBooking(booking);
-    setNewStartAt(""); 
+    setNewStartAt("");
     setRescheduleModalOpen(true);
   };
 
-  // Mở modal hủy
   const handleCancel = (booking) => {
     setSelectedBooking(booking);
     setCancelReason("");
     setCancelModalOpen(true);
   };
 
-  // Submit reschedule
   const submitReschedule = async () => {
     try {
       if (!newStartAt) return alert("Hãy chọn thời gian!");
@@ -60,7 +64,6 @@ export default function MyBookings() {
     }
   };
 
-  // Submit cancel
   const submitCancel = async () => {
     try {
       await bookingApi.cancelBooking(selectedBooking.id, {
@@ -81,11 +84,13 @@ export default function MyBookings() {
 
       {bookings.length === 0 ? (
         <div className="flex flex-col items-center mt-20">
-          <p className="text-gray-500 text-lg mb-4">Bạn chưa có booking nào.</p>
+          <p className="text-gray-500 text-lg mb-4">
+            Bạn chưa có booking nào.
+          </p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {bookings.map(b => (
+          {bookings.map((b) => (
             <BookingCard
               key={b.id}
               booking={b}
@@ -96,7 +101,7 @@ export default function MyBookings() {
         </div>
       )}
 
-      {/* ---------------- MODAL RESCHEDULE ---------------- */}
+      {/* Modal Reschedule */}
       <Modal
         open={rescheduleModalOpen}
         title="Thay đổi thời gian đặt lịch"
@@ -119,7 +124,7 @@ export default function MyBookings() {
         </button>
       </Modal>
 
-      {/* ---------------- MODAL CANCEL ---------------- */}
+      {/* Modal Cancel */}
       <Modal
         open={cancelModalOpen}
         title="Hủy lịch hẹn"

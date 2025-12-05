@@ -5,7 +5,6 @@ using SpaBooking.Application.Requests.Users;
 
 namespace SpaBooking.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -13,6 +12,7 @@ namespace SpaBooking.API.Controllers
         private readonly IMediator _mediator;
         public UsersController(IMediator mediator) => _mediator = mediator;
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -20,6 +20,7 @@ namespace SpaBooking.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost] // Create user
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
@@ -27,6 +28,7 @@ namespace SpaBooking.API.Controllers
             return Ok(new { UserId = id });
         }
 
+        [Authorize]
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
@@ -39,18 +41,20 @@ namespace SpaBooking.API.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPut("profile")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileCommand cmd)
         {
             var userId = Guid.Parse(User.FindFirst("UserId")!.Value);
 
             var result = await _mediator.Send(
-                new UpdateProfileCommand(userId, cmd.FullName, cmd.PhoneNumber)
+                new UpdateProfileCommand(userId, cmd.Username, cmd.FullName, cmd.Email, cmd.PhoneNumber)
             );
 
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")] // Update user
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserCommand cmd)
         {
@@ -59,6 +63,7 @@ namespace SpaBooking.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")] // Delete user
         public async Task<IActionResult> Delete(Guid id)
         {

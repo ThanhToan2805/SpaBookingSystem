@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SpaBooking.Persistence.Contexts;
@@ -11,9 +12,11 @@ using SpaBooking.Persistence.Contexts;
 namespace SpaBooking.Persistence.Migrations
 {
     [DbContext(typeof(SpaBookingDbContext))]
-    partial class SpaBookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251205074118_AddTablePasswordResetToken")]
+    partial class AddTablePasswordResetToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
