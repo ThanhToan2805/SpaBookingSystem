@@ -36,7 +36,7 @@ namespace SpaBooking.Persistence.Repositories
 
         public async Task<Payment?> GetByIdAsync(Guid id)
         {
-            return await _db.Payments.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return await _db.Payments.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task UpdateAsync(Payment entity)

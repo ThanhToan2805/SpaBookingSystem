@@ -147,7 +147,12 @@ namespace SpaBooking.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("PaidAt")
+                    b.Property<string>("InvoiceCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("PaidAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaymentMethod")
@@ -160,9 +165,16 @@ namespace SpaBooking.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("TransactionCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId");
+
+                    b.HasIndex("InvoiceCode")
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -177,7 +189,6 @@ namespace SpaBooking.Persistence.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<decimal?>("DiscountPercent")
-                        .IsRequired()
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("EndAt")

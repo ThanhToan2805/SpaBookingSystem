@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SpaBooking.API.Settings;
+using SpaBooking.API.Services;
 using SpaBooking.Application;
 using SpaBooking.Application.Behaviors;
 using SpaBooking.Application.Common;
@@ -82,6 +84,12 @@ builder.Services.Scan(scan => scan
 // Register Services
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+// Bind config VNPay
+builder.Services.Configure<VnPaySettings>(builder.Configuration.GetSection("VnPay"));
+
+// Register VNPay service
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 // Add Infrastructure (e.g., Cloudinary)
 builder.Services.AddInfrastructure(builder.Configuration);

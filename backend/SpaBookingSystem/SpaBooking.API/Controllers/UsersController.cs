@@ -55,15 +55,6 @@ namespace SpaBooking.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")] // Update user
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserCommand cmd)
-        {
-            cmd.Id = id;
-            await _mediator.Send(cmd);
-            return NoContent();
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")] // Delete user
         public async Task<IActionResult> Delete(Guid id)
         {

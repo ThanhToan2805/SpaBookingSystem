@@ -51,7 +51,10 @@ export default function ServiceForm() {
   // Xử lý input change
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   // Upload ảnh
@@ -64,9 +67,13 @@ export default function ServiceForm() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await axios.post("http://localhost:5012/api/files/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.post(
+        "http://localhost:5012/api/files/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       const url = res.data.url; // backend trả về URL ảnh
       setForm((prev) => ({ ...prev, imageUrl: url }));
@@ -100,96 +107,161 @@ export default function ServiceForm() {
     }
   };
 
+  const title = id ? "Cập nhật Service" : "Tạo Service mới";
+
   return (
-    <AdminLayout title={id ? "Edit Service" : "Create Service"}>
-      <form onSubmit={submit} className="space-y-4 bg-white p-6 rounded shadow max-w-2xl">
-        <label className="block font-medium">Name</label>
-        <input
-          name="name"
-          value={form.name}
-          onChange={onChange}
-          placeholder="Service name"
-          className="w-full px-3 py-2 border rounded"
-          required
-        />
+    <AdminLayout title={title}>
+      <form
+        onSubmit={submit}
+        className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-4xl"
+      >
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Cột trái + giữa: thông tin chính */}
+          <div className="md:col-span-2 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Tên dịch vụ
+              </label>
+              <input
+                name="name"
+                value={form.name}
+                onChange={onChange}
+                placeholder="Nhập tên dịch vụ (ví dụ: Massage thư giãn toàn thân)"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
+              />
+            </div>
 
-        <label className="block font-medium">Description</label>
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={onChange}
-          placeholder="Description"
-          rows={3}
-          className="w-full px-3 py-2 border rounded"
-        />
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Mô tả
+              </label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={onChange}
+                placeholder="Mô tả chi tiết về dịch vụ, lợi ích, đối tượng phù hợp..."
+                rows={4}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
 
-        <label className="block font-medium">Price</label>
-        <input
-          name="price"
-          value={form.price}
-          onChange={onChange}
-          placeholder="Price"
-          type="number"
-          className="w-full px-3 py-2 border rounded"
-        />
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Giá (VND)
+                </label>
+                <input
+                  name="price"
+                  value={form.price}
+                  onChange={onChange}
+                  placeholder="Nhập giá dịch vụ"
+                  type="number"
+                  min="0"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
 
-        <label className="block font-medium">Duration (minutes)</label>
-        <input
-          name="durationMinutes"
-          value={form.durationMinutes}
-          onChange={onChange}
-          placeholder="Duration"
-          type="number"
-          className="w-full px-3 py-2 border rounded"
-        />
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Thời lượng (phút)
+                </label>
+                <input
+                  name="durationMinutes"
+                  value={form.durationMinutes}
+                  onChange={onChange}
+                  placeholder="Ví dụ: 60"
+                  type="number"
+                  min="0"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+            </div>
 
-        <label className="block font-medium">Category</label>
-        <select
-          name="categoryId"
-          value={form.categoryId}
-          onChange={onChange}
-          className="w-full px-3 py-2 border rounded"
-          required
-        >
-          <option value="">-- Select Category --</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Category
+              </label>
+              <select
+                name="categoryId"
+                value={form.categoryId}
+                onChange={onChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
+              >
+                <option value="">-- Chọn Category --</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-        {/* Image upload */}
-        <div>
-          <label className="block font-medium mb-1">Image</label>
-          <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} />
-          {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-          {form.imageUrl && (
-            <img
-              src={form.imageUrl}
-              alt="preview"
-              className="w-32 h-32 mt-3 object-cover rounded border"
-            />
-          )}
+          {/* Cột phải: ảnh + trạng thái */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Hình ảnh
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleUpload}
+                disabled={uploading}
+                className="text-sm"
+              />
+              {uploading && (
+                <p className="text-xs text-slate-500 mt-1">
+                  Đang upload...
+                </p>
+              )}
+              {form.imageUrl && (
+                <div className="mt-3">
+                  <img
+                    src={form.imageUrl}
+                    alt="preview"
+                    className="w-40 h-40 object-cover rounded-xl border border-slate-200"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 mt-4">
+              <input
+                type="checkbox"
+                name="isActive"
+                checked={form.isActive}
+                onChange={onChange}
+                id="isActive"
+                className="h-4 w-4"
+              />
+              <label
+                htmlFor="isActive"
+                className="text-sm text-slate-700 select-none"
+              >
+                Active (hiển thị trên website)
+              </label>
+            </div>
+          </div>
         </div>
 
-        {/* isActive */}
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="isActive"
-            checked={form.isActive}
-            onChange={onChange}
-          />
-          <label>Active</label>
+        <div className="flex justify-end gap-3 mt-6">
+          <button
+            type="button"
+            onClick={() => navigate("/admin/services")}
+            className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition"
+          >
+            Hủy
+          </button>
+          <button
+            type="submit"
+            className="px-5 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition"
+          >
+            {id ? "Cập nhật" : "Tạo mới"}
+          </button>
         </div>
-
-        <button
-          type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          {id ? "Update" : "Create"}
-        </button>
       </form>
     </AdminLayout>
   );

@@ -18,7 +18,7 @@ namespace SpaBooking.Persistence.Repositories
             => _db.Bookings.AsNoTracking();
 
         public async Task<Booking?> GetByIdAsync(Guid id)
-            => await _db.Bookings.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            => await _db.Bookings.Include(b => b.Customer).Include(b => b.Service).FirstOrDefaultAsync(b => b.Id == id);
 
         public async Task AddAsync(Booking entity)
         {

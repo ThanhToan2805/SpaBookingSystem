@@ -25,7 +25,7 @@ namespace SpaBooking.Application.UseCases.Staffs
 
             if (staff == null) return null;
 
-            staff.IsAvailable = request.IsAvailable;
+            staff.IsAvailable = !staff.IsAvailable;
 
             await _staffRepository.UpdateAsync(staff);
 

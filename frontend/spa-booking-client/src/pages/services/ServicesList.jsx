@@ -22,13 +22,14 @@ export default function ServicesList() {
 
   useEffect(() => {
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, keyword, priceRange, sortBy, sortDesc, page]);
 
   useEffect(() => {
-  if (!loading) {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-}, [page, loading]);
+    if (!loading) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [page, loading]);
 
   const load = async () => {
     try {
@@ -51,9 +52,7 @@ export default function ServicesList() {
 
       const nextParams = { ...params, page: page + 1 };
       const nextPageData = await serviceApi.getAdvanced(nextParams);
-      
       setIsLastPage(nextPageData.length === 0);
-
     } catch (err) {
       console.error("Lỗi load services:", err);
     } finally {
@@ -71,146 +70,177 @@ export default function ServicesList() {
 
   return (
     <LayoutWrapper>
-      <h2 className="text-3xl font-bold mb-6">
-        Services {categoryId ? "In This Category" : ""}
-      </h2>
-      <div className="flex gap-6">
-        {/* LEFT FILTER SIDEBAR */}
-        <div className="w-72 shrink-0 sticky top-24 h-max p-4 bg-white rounded-xl shadow">
-          <h3 className="font-semibold text-lg mb-3">Filter Services</h3>
+      <div className="py-8">
+        <h2 className="text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+          Danh sách dịch vụ
+          {categoryId ? " theo danh mục" : ""}
+        </h2>
+        <p className="text-sm text-gray-500 mb-6">
+          Lọc và tìm kiếm dịch vụ phù hợp với nhu cầu của bạn.
+        </p>
 
-          {/* Search */}
-          <div className="mb-4">
-            <label className="font-medium text-gray-700">Search</label>
-            <input
-              type="text"
-              className="mt-1 border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Search services..."
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
-          </div>
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* LEFT FILTER SIDEBAR */}
+          <div className="w-full md:w-72 shrink-0 md:sticky md:top-24 h-max p-5 bg-white rounded-2xl shadow border border-gray-100">
+            <h3 className="font-semibold text-lg mb-4 text-gray-800">
+              Bộ lọc dịch vụ
+            </h3>
 
-          {/* Sort By */}
-          <div className="mb-4">
-            <label className="font-medium text-gray-700">Sort By</label>
-            <select
-              className="mt-1 border border-gray-300 rounded-lg px-3 py-2 w-full"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
-              <option value="name">Name</option>
-              <option value="price">Price</option>
-              <option value="duration">Duration</option>
-            </select>
-          </div>
-
-          {/* Sort Order */}
-          <div className="mb-4">
-            <label className="font-medium text-gray-700">Order</label>
-            <select
-              className="mt-1 border border-gray-300 rounded-lg px-3 py-2 w-full"
-              value={sortDesc ? "desc" : "asc"}
-              onChange={(e) => setSortDesc(e.target.value === "desc")}
-            >
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
-            </select>
-          </div>
-
-          {/* Price Range */}
-          <div className="mb-4">
-            <label className="font-medium text-gray-700">Price Range</label>
-
-            <input
-              type="range"
-              min="0"
-              max="2000000"
-              step="50000"
-              value={priceRange[0]}
-              onChange={(e) =>
-                setPriceRange([Number(e.target.value), priceRange[1]])
-              }
-              className="w-full mt-2"
-            />
-
-            <input
-              type="range"
-              min="0"
-              max="2000000"
-              step="50000"
-              value={priceRange[1]}
-              onChange={(e) =>
-                setPriceRange([priceRange[0], Number(e.target.value)])
-              }
-              className="w-full"
-            />
-
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>{priceRange[0].toLocaleString()} VND</span>
-              <span>{priceRange[1].toLocaleString()} VND</span>
+            {/* Search */}
+            <div className="mb-4">
+              <label className="font-medium text-sm text-gray-700">
+                Tìm kiếm
+              </label>
+              <input
+                type="text"
+                className="mt-1 border border-gray-300 rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Nhập tên dịch vụ..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
             </div>
+
+            {/* Sort By */}
+            <div className="mb-4">
+              <label className="font-medium text-sm text-gray-700">
+                Sắp xếp theo
+              </label>
+              <select
+                className="mt-1 border border-gray-300 rounded-lg px-3 py-2 w-full text-sm"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="name">Tên</option>
+                <option value="price">Giá</option>
+                <option value="duration">Thời lượng</option>
+              </select>
+            </div>
+
+            {/* Sort Order */}
+            <div className="mb-4">
+              <label className="font-medium text-sm text-gray-700">
+                Thứ tự
+              </label>
+              <select
+                className="mt-1 border border-gray-300 rounded-lg px-3 py-2 w-full text-sm"
+                value={sortDesc ? "desc" : "asc"}
+                onChange={(e) =>
+                  setSortDesc(e.target.value === "desc")
+                }
+              >
+                <option value="asc">Tăng dần</option>
+                <option value="desc">Giảm dần</option>
+              </select>
+            </div>
+
+            {/* Price Range */}
+            <div className="mb-4">
+              <label className="font-medium text-sm text-gray-700">
+                Khoảng giá
+              </label>
+
+              <input
+                type="range"
+                min="0"
+                max="2000000"
+                step="50000"
+                value={priceRange[0]}
+                onChange={(e) =>
+                  setPriceRange([
+                    Number(e.target.value),
+                    priceRange[1],
+                  ])
+                }
+                className="w-full mt-2"
+              />
+
+              <input
+                type="range"
+                min="0"
+                max="2000000"
+                step="50000"
+                value={priceRange[1]}
+                onChange={(e) =>
+                  setPriceRange([
+                    priceRange[0],
+                    Number(e.target.value),
+                  ])
+                }
+                className="w-full"
+              />
+
+              <div className="flex justify-between text-xs text-gray-600 mt-1">
+                <span>
+                  {priceRange[0].toLocaleString()} VND
+                </span>
+                <span>
+                  {priceRange[1].toLocaleString()} VND
+                </span>
+              </div>
+            </div>
+
+            {/* Reset */}
+            <button
+              onClick={resetFilters}
+              className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-100"
+            >
+              Đặt lại bộ lọc
+            </button>
           </div>
 
-          {/* Reset */}
-          <button
-            onClick={resetFilters}
-            className="mt-2 w-full px-4 py-2 border rounded-lg hover:bg-gray-100"
-          >
-            Reset Filters
-          </button>
-        </div>
+          {/* RIGHT SERVICE LIST */}
+          <div className="flex-1">
+            {loading ? (
+              <p className="text-gray-500">Loading...</p>
+            ) : !services || services.length === 0 ? (
+              <p className="text-gray-500">
+                Không có service nào.
+              </p>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {services.map((s) => (
+                    <ServiceCard key={s.id} service={s} />
+                  ))}
+                </div>
 
-        {/* RIGHT SERVICE LIST */}
-        <div className="flex-1">
+                {/* PAGINATION */}
+                <div className="flex justify-center gap-3 mt-8">
+                  {/* PREVIOUS */}
+                  <button
+                    disabled={page === 1}
+                    onClick={() =>
+                      setPage((p) => Math.max(1, p - 1))
+                    }
+                    className={`px-4 py-2 rounded-lg border text-sm font-medium ${
+                      page === 1
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    Previous
+                  </button>
 
-          {/* SERVICE LIST */}
-          {loading ? (
-            <p className="text-gray-500">Loading...</p>
-          ) : !services || services.length === 0 ? (
-            <p className="text-gray-500">Không có service nào.</p>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {services.map((s) => (
-                  <ServiceCard key={s.id} service={s} />
-                ))}
-              </div>
+                  <span className="px-4 py-2 font-medium text-sm">
+                    Page {page}
+                  </span>
 
-              {/* PAGINATION */}
-              <div className="flex justify-center gap-3 mt-8">
-                {/* PREVIOUS */}
-                <button
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className={`px-4 py-2 rounded-lg border ${
-                    page === 1
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
-                  Previous
-                </button>
-
-                <span className="px-4 py-2 font-medium">
-                  Page {page}
-                </span>
-
-                {/* NEXT */}
-                <button
-                  disabled={isLastPage}
-                  onClick={() => setPage((p) => p + 1)}
-                  className={`px-4 py-2 rounded-lg border ${
-                    isLastPage
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          )}
+                  {/* NEXT */}
+                  <button
+                    disabled={isLastPage}
+                    onClick={() => setPage((p) => p + 1)}
+                    className={`px-4 py-2 rounded-lg border text-sm font-medium ${
+                      isLastPage
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </LayoutWrapper>

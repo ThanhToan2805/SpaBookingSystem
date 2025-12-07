@@ -4,10 +4,14 @@ import Footer from "./Footer";
 
 export default function LayoutWrapper({ children }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#F7F7FB]">
       <TopBar />
       <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-6">{children}</main>
+
+      <main className="flex-1 container mx-auto px-4 py-10">
+        {children}
+      </main>
+
       <Footer />
     </div>
   );

@@ -4,18 +4,29 @@ export default function CategoryCard({ category }) {
   return (
     <Link
       to={`/services?categoryId=${category.id}`}
-      className="relative bg-white rounded-xl shadow-md p-6 flex flex-col justify-between transform transition duration-300 hover:scale-105 hover:shadow-2xl group overflow-hidden"
+      className="relative bg-white rounded-2xl shadow-md p-6 flex flex-col justify-between 
+        transform transition duration-300 hover:-translate-y-1 hover:shadow-2xl group overflow-hidden"
     >
-      {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-linear-to-br from-purple-500 to-indigo-500 opacity-10 rounded-xl pointer-events-none"></div>
+      {/* Gradient nền nhẹ */}
+      <div className="absolute inset-0 bg-linear-to-br from-purple-500/10 via-pink-500/5 to-indigo-500/10 opacity-80 pointer-events-none" />
 
-      <h3 className="text-xl font-semibold mb-2 z-10 relative text-gray-800 group-hover:text-purple-600 transition">
-        {category.name}
-      </h3>
-      <p className="text-gray-600 mb-4 z-10 relative line-clamp-3">{category.description}</p>
-      <button className="mt-auto bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition z-10 relative font-medium">
-        View Services
-      </button>
+      <div className="relative z-10 space-y-2">
+        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-purple-600 transition">
+          {category.name}
+        </h3>
+        <p className="text-gray-600 text-sm line-clamp-3">
+          {category.description}
+        </p>
+      </div>
+
+      <div className="relative z-10 mt-4 flex justify-center">
+        <button
+          className="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white 
+            group-hover:bg-purple-700 transition"
+        >
+          Xem dịch vụ
+        </button>
+      </div>
     </Link>
   );
 }

@@ -126,7 +126,6 @@ namespace SpaBooking.Persistence.Contexts
             {
                 b.HasKey(p => p.Id);
                 b.Property(p => p.Name).IsRequired().HasMaxLength(200);
-                b.Property(p => p.DiscountPercent).IsRequired();
                 b.Property(p => p.IsActive).IsRequired();
 
                 // Relationship với Booking
@@ -190,8 +189,12 @@ namespace SpaBooking.Persistence.Contexts
                 b.Property(p => p.Amount).HasColumnType("numeric(12,2)").IsRequired();
                 b.Property(p => p.PaymentMethod).IsRequired().HasMaxLength(50);
                 b.Property(p => p.Status).HasConversion<string>().HasMaxLength(50).IsRequired();
-                b.Property(p => p.PaidAt);
+                b.Property(p => p.PaidAt).IsRequired(false);
                 b.Property(p => p.CreatedAt).IsRequired();
+                b.Property(p => p.InvoiceCode).IsRequired().HasMaxLength(50);
+                b.Property(p => p.TransactionCode).HasMaxLength(100);
+
+                b.HasIndex(p => p.InvoiceCode).IsUnique();
 
                 b.HasOne(p => p.Booking)
                  .WithMany(bk => bk.Payments)

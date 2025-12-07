@@ -17,50 +17,90 @@ export default function CategoryList() {
     load();
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   return (
     <AdminLayout title="Quản lý Categories">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">
+            Danh sách category
+          </h2>
+          <p className="text-xs text-slate-400">
+            Quản lý các nhóm dịch vụ của LumiSpa.
+          </p>
+        </div>
         <Link
           to="/admin/categories/create"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition"
         >
-          + Create
+          + Tạo category
         </Link>
       </div>
 
-      <table className="w-full border-collapse border rounded shadow bg-white">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="p-3 border">Name</th>
-            <th className="p-3 border">Description</th>
-            <th className="p-3 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((x) => (
-            <tr key={x.id} className="hover:bg-gray-50">
-              <td className="p-3 border">{x.name}</td>
-              <td className="p-3 border">{x.description}</td>
-              <td className="p-3 border flex gap-2">
-                <Link
-                  to={`/admin/categories/edit/${x.id}`}
-                  className="px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500"
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDelete(x.id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="bg-slate-50 text-center text-xs uppercase tracking-wide text-slate-500">
+              <th className="p-3 border-b border-slate-100">Tên</th>
+              <th className="p-3 border-b border-slate-100">Mô tả</th>
+              <th className="p-3 border-b border-slate-100 w-40">
+                Thao tác
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="p-4 text-center text-slate-400 text-sm"
+                >
+                  Chưa có category nào.
+                </td>
+              </tr>
+            ) : (
+              data.map((x) => (
+                <tr
+                  key={x.id}
+                  className="hover:bg-slate-50 transition border-b border-slate-50"
+                >
+                  <td className="p-3 align-top">
+                    <div className="font-semibold text-slate-900">
+                      {x.name}
+                    </div>
+                  </td>
+                  <td className="p-3 align-top text-slate-600">
+                    {x.description || (
+                      <span className="text-xs text-slate-400">
+                        Không có mô tả
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-3 align-top">
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        to={`/admin/categories/edit/${x.id}`}
+                        className="px-3 py-1.5 bg-amber-400 text-slate-900 rounded-lg text-xs font-medium hover:bg-amber-500 transition"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(x.id)}
+                        className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-xs font-medium hover:bg-red-600 transition"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </AdminLayout>
   );
 }

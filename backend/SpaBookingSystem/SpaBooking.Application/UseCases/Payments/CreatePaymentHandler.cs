@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SpaBooking.Application.Common;
 using SpaBooking.Application.Interfaces.Repositories;
 using SpaBooking.Application.Requests.Payments;
 using SpaBooking.Contracts.DTOs.Payments;
@@ -10,21 +11,32 @@ namespace SpaBooking.Application.UseCases.Payments
 {
     public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, PaymentDto>
     {
-        private readonly IPaymentRepository _repo;
+        private readonly IPaymentRepository _paymentRepo;
+        private readonly IBookingRepository _bookingRepo;
 
-        public CreatePaymentHandler(IPaymentRepository repo) => _repo = repo;
+        public CreatePaymentHandler(IPaymentRepository paymentRepo, IBookingRepository bookingRepo)
+        {
+            _paymentRepo = paymentRepo;
+            _bookingRepo = bookingRepo;
+        }
 
         public async Task<PaymentDto> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
         {
+            var booking = await _bookingRepo.GetByIdAsync(request.BookingId);
+            if (booking == null)
+                throw new Exception("Booking not found");
+
             var payment = new Payment
             {
                 BookingId = request.BookingId,
-                Amount = request.Amount,
+                Amount = booking.FinalPrice,
                 PaymentMethod = request.PaymentMethod,
-                PaidAt = request.PaidAt
+                Status = PaymentStatus.Pending,
+                InvoiceCode = InvoiceCodeGenerator.Generate(),
+                PaidAt = null
             };
 
-            await _repo.AddAsync(payment);
+            await _paymentRepo.AddAsync(payment);
 
             return new PaymentDto
             {
@@ -33,6 +45,8 @@ namespace SpaBooking.Application.UseCases.Payments
                 Amount = payment.Amount,
                 PaymentMethod = payment.PaymentMethod,
                 Status = payment.Status.ToString(),
+                TransactionCode = payment.TransactionCode,
+                InvoiceCode = payment.InvoiceCode,
                 PaidAt = payment.PaidAt,
                 CreatedAt = payment.CreatedAt
             };

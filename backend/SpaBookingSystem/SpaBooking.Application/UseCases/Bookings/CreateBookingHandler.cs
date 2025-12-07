@@ -57,9 +57,19 @@ namespace SpaBooking.Application.UseCases.Bookings
                                               p.StartAt <= DateTime.UtcNow &&
                                               p.EndAt >= DateTime.UtcNow,
                                          cancellationToken);
-                if (promotion != null && promotion.DiscountPercent.HasValue)
+                if (promotion != null)
                 {
-                    finalPrice = finalPrice * (1 - (decimal)(promotion.DiscountPercent ?? 0) / 100m);
+                    if (promotion.DiscountPercent.HasValue)
+                    {
+                        finalPrice = service.Price * (1 - promotion.DiscountPercent.Value / 100m);
+                    }
+                    else if (promotion.DiscountAmount.HasValue)
+                    {
+                        finalPrice = service.Price - promotion.DiscountAmount.Value;
+                    }
+
+                    if (finalPrice < 0)
+                        finalPrice = 0;
                 }
             }
 

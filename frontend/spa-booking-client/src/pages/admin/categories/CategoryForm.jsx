@@ -22,7 +22,9 @@ export default function CategoryForm() {
     }
   };
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    load();
+  }, [id]);
 
   // Submit form
   const submit = async (e) => {
@@ -30,8 +32,8 @@ export default function CategoryForm() {
 
     const payload = {
       id: id,
-      name: name.trim(),               // loại bỏ khoảng trắng đầu/cuối
-      description: description.trim(), // gửi "" nếu rỗng
+      name: name.trim(),
+      description: description.trim(),
     };
 
     try {
@@ -47,34 +49,58 @@ export default function CategoryForm() {
     }
   };
 
+  const title = id ? "Cập nhật Category" : "Tạo Category mới";
+
   return (
-    <AdminLayout title={id ? "Update Category" : "Create Category"}>
-      <form onSubmit={submit} className="space-y-4 max-w-md bg-white p-6 rounded shadow">
-        <label className="block font-medium">Name</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Category name"
-          required
-        />
-
-        <label className="block font-medium">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Description"
-          rows={3}
-        />
-
-        <button
-          type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+    <AdminLayout title={title}>
+      <div className="max-w-xl">
+        <form
+          onSubmit={submit}
+          className="space-y-4 bg-white rounded-2xl shadow-sm border border-slate-100 p-6"
         >
-          {id ? "Update" : "Create"}
-        </button>
-      </form>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Tên category
+            </label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Nhập tên category (ví dụ: Massage, Facial, ...)"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Mô tả
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Mô tả ngắn gọn về category này"
+              rows={3}
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => navigate("/admin/categories")}
+              className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition"
+            >
+              {id ? "Cập nhật" : "Tạo mới"}
+            </button>
+          </div>
+        </form>
+      </div>
     </AdminLayout>
   );
 }

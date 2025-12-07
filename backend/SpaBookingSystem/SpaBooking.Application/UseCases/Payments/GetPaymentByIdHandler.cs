@@ -25,6 +25,8 @@ namespace SpaBooking.Application.UseCases.Payments
                 Amount = payment.Amount,
                 PaymentMethod = payment.PaymentMethod,
                 Status = payment.Status.ToString(),
+                TransactionCode = payment.TransactionCode,
+                InvoiceCode = payment.InvoiceCode,
                 PaidAt = payment.PaidAt,
                 CreatedAt = payment.CreatedAt
             };
