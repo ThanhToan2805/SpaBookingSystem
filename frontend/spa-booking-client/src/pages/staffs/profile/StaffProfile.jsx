@@ -1,4 +1,3 @@
-// src/pages/staffs/StaffProfile.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../../api/userApi";
@@ -137,8 +136,6 @@ export default function StaffProfile() {
                   </div>
                 </div>
               </div>
-
-              {/* Có thể thêm block khác sau này: Thông tin staff (position, status...) */}
             </div>
           </div>
         </div>

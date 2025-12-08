@@ -53,11 +53,11 @@ export default function BookingDetail() {
       try {
         setLoading(true);
 
-        // 1. Lấy booking trước
+        // Lấy booking trước
         const b = await bookingApi.getById(id);
         setBooking(b);
 
-        // 2. Lấy metadata (dạng list) để map Id → tên
+        // Lấy metadata (dạng list) để map Id → tên
         const [userRes, staffRes, serviceRes, promoRes] = await Promise.all([
           userApi.getAll(),
           staffApi.getAll(),

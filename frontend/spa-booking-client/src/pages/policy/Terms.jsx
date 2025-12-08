@@ -17,7 +17,7 @@ export default function Terms() {
           </div>
 
           <div className="space-y-6">
-            {/* 1. Phạm vi áp dụng */}
+            {/* Phạm vi áp dụng */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 1. Phạm vi áp dụng
@@ -29,7 +29,7 @@ export default function Terms() {
               </p>
             </section>
 
-            {/* 2. Tài khoản & bảo mật */}
+            {/* Tài khoản & bảo mật */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 2. Tài khoản và bảo mật
@@ -41,7 +41,7 @@ export default function Terms() {
               </ul>
             </section>
 
-            {/* 3. Hành vi bị cấm */}
+            {/* Hành vi bị cấm */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 3. Hành vi bị cấm
@@ -56,7 +56,7 @@ export default function Terms() {
               </ul>
             </section>
 
-            {/* 4. Thay đổi dịch vụ */}
+            {/* Thay đổi dịch vụ */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 4. Thay đổi, gián đoạn dịch vụ
@@ -68,7 +68,7 @@ export default function Terms() {
               </p>
             </section>
 
-            {/* 5. Cam kết & giới hạn trách nhiệm */}
+            {/* Cam kết & giới hạn trách nhiệm */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 5. Cam kết và giới hạn trách nhiệm

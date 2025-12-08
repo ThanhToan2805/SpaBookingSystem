@@ -1,4 +1,3 @@
-// src/pages/staffs/StaffDashboard.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { staffApi } from "../../api/staffApi";
@@ -63,7 +62,7 @@ export default function StaffDashboard() {
   const [users, setUsers] = useState([]);
   const [loadingMeta, setLoadingMeta] = useState(false);
 
-  // 1. Map user → staff (dùng user.UserId)
+  // Map user → staff (dùng user.UserId)
   useEffect(() => {
     if (!user) return;
 
@@ -86,7 +85,7 @@ export default function StaffDashboard() {
     loadStaff();
   }, [user]);
 
-  // 1.b. Load services + users (để join tên)
+  // Load services + users (để join tên)
   useEffect(() => {
     const loadMeta = async () => {
       try {
@@ -107,7 +106,7 @@ export default function StaffDashboard() {
     loadMeta();
   }, []);
 
-  // 2. Load overview (working-hours + utilization + bookings)
+  // Load overview (working-hours + utilization + bookings)
   const loadOverview = async () => {
     if (!staff || !from || !to) return;
     try {
@@ -165,10 +164,9 @@ export default function StaffDashboard() {
     if (staff && from && to) {
       loadOverview();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff]);
 
-  // 3. Load schedule + bookings cho ngày selectedDate
+  // Load schedule + bookings cho ngày selectedDate
   const loadTodayData = async () => {
     if (!staff || !selectedDate) return;
     try {
@@ -221,7 +219,7 @@ export default function StaffDashboard() {
             b.status !== "Cancelled" &&
             b.status !== "NoShow"
         )
-        // loại booking của hôm nay (nếu muốn chỉ thấy tương lai)
+        // loại booking của hôm nay
         .filter((b) => {
             const dateStr = new Date(b.startAt).toISOString().slice(0, 10);
             return dateStr !== todayStr;
@@ -240,7 +238,6 @@ export default function StaffDashboard() {
       loadTodayData();
       loadUpcomingBookings();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff, selectedDate]);
 
   // 4. Toggle availability
@@ -249,7 +246,7 @@ export default function StaffDashboard() {
     try {
       setToggling(true);
       const updated = await staffApi.toggleAvailability(staff.id);
-      // Backend trả về StaffDto mới (đã toggle isAvailable)
+      // Backend trả về StaffDto mới
       setIsAvailable(updated?.isAvailable ?? null);
     } catch (err) {
       console.error("Failed to toggle availability", err);

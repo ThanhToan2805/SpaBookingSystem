@@ -1,4 +1,3 @@
-// src/pages/admin/AdminChangePassword.jsx
 import { useState } from "react";
 import AdminLayout from "./layout/AdminLayout";
 import { authApi } from "../../api/authApi";

@@ -1,7 +1,6 @@
-// src/pages/admin/AdminProfile.jsx
 import { useEffect, useState } from "react";
 import AdminLayout from "./layout/AdminLayout";
-import { userApi } from "../../api/userApi"; // chỉnh lại path nếu bạn để api ở chỗ khác
+import { userApi } from "../../api/userApi";
 import { Link } from "react-router-dom";
 
 export default function AdminProfile() {
@@ -80,7 +79,7 @@ export default function AdminProfile() {
         </div>
       ) : (
         <div className="max-w-5xl mx-auto space-y-6">
-          {/* Header đẹp đẹp */}
+          {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white text-2xl font-bold shadow-sm">

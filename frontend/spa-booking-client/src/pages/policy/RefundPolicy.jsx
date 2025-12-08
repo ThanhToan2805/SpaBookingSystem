@@ -18,7 +18,7 @@ export default function RefundPolicy() {
           </div>
 
           <div className="space-y-6">
-            {/* 1. Trường hợp được hoàn tiền */}
+            {/* Trường hợp được hoàn tiền */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 1. Các trường hợp được xem xét hoàn tiền
@@ -30,7 +30,7 @@ export default function RefundPolicy() {
               </ul>
             </section>
 
-            {/* 2. Trường hợp không hoàn tiền */}
+            {/* Trường hợp không hoàn tiền */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 2. Các trường hợp không được hoàn tiền
@@ -42,7 +42,7 @@ export default function RefundPolicy() {
               </ul>
             </section>
 
-            {/* 3. Hình thức & quy trình hoàn tiền */}
+            {/* Hình thức & quy trình hoàn tiền */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 3. Hình thức và quy trình hoàn tiền
@@ -64,7 +64,7 @@ export default function RefundPolicy() {
               </p>
             </section>
 
-            {/* 4. Liên hệ hỗ trợ */}
+            {/* Liên hệ hỗ trợ */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 4. Liên hệ hỗ trợ hoàn tiền

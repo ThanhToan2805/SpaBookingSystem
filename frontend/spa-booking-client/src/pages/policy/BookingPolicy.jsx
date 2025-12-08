@@ -16,7 +16,7 @@ export default function BookingPolicy() {
           </div>
 
           <div className="space-y-6">
-            {/* 1. Thời gian đặt lịch */}
+            {/* Thời gian đặt lịch */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 1. Thời gian đặt lịch
@@ -27,7 +27,7 @@ export default function BookingPolicy() {
               </ul>
             </section>
 
-            {/* 2. Xác nhận đặt lịch */}
+            {/* Xác nhận đặt lịch */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 2. Xác nhận đặt lịch
@@ -41,7 +41,7 @@ export default function BookingPolicy() {
               </ul>
             </section>
 
-            {/* 3. Thay đổi & hủy lịch */}
+            {/* Thay đổi & hủy lịch */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 3. Thay đổi hoặc hủy lịch
@@ -53,7 +53,7 @@ export default function BookingPolicy() {
               </ul>
             </section>
 
-            {/* 4. Đến trễ & No-show */}
+            {/* Đến trễ & No-show */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 4. Đến trễ & vắng mặt (No-show)

@@ -39,7 +39,7 @@ export default function UserForm() {
       return;
     }
 
-    // ⚠️ Payload phải đúng y chang CreateUserCommand
+    // Payload phải đúng y chang CreateUserCommand
     const payload = {
       username: form.username.trim(),
       email: form.email.trim(),
@@ -51,7 +51,7 @@ export default function UserForm() {
     try {
       setSubmitting(true);
       const res = await userApi.create(payload);
-      // BE trả { userId: guid } hoặc { UserId: guid }, tùy casing, nhưng mình không dùng cũng được
+      // BE trả { userId: guid } hoặc { UserId: guid }
       console.log("User created:", res);
       alert("Tạo user thành công!");
       navigate("/admin/users");

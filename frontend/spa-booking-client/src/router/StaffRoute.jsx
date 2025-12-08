@@ -12,7 +12,7 @@ export default function StaffRoute({ children }) {
   const role =
     user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-  // Chỉ cho Staff (và optionally Admin) vào dashboard staff
+  // Chỉ cho Staff vào dashboard staff
   if (role !== "Staff") {
     return <Navigate to="/" />;
   }

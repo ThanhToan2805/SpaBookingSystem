@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
 
           {/* Content */}
           <div className="space-y-6">
-            {/* 1. Thông tin thu thập */}
+            {/* Thông tin thu thập */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 1. Thông tin chúng tôi thu thập
@@ -33,7 +33,7 @@ export default function PrivacyPolicy() {
               </ul>
             </section>
 
-            {/* 2. Mục đích sử dụng */}
+            {/* Mục đích sử dụng */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 2. Mục đích sử dụng thông tin
@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
               </ul>
             </section>
 
-            {/* 3. Bảo mật & chia sẻ */}
+            {/* Bảo mật & chia sẻ */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 3. Bảo mật và chia sẻ thông tin
@@ -67,7 +67,7 @@ export default function PrivacyPolicy() {
               </p>
             </section>
 
-            {/* 4. Quyền của người dùng */}
+            {/* Quyền của người dùng */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">
                 4. Quyền của bạn đối với dữ liệu

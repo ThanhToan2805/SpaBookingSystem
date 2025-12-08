@@ -28,7 +28,6 @@ export function getRoleFromToken(token) {
   const decoded = decodeToken(token);
   if (!decoded) return null;
 
-  // Thử lấy từ standard claim URL
   const roleClaim =
     decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 

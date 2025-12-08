@@ -10,7 +10,7 @@ export default function BookingCard({ booking, onReschedule, onCancel }) {
 
   // console.log(booking);
 
-  // Lấy toàn bộ service và staff (giữ nguyên logic)
+  // Lấy toàn bộ service và staff
   useEffect(() => {
     serviceApi.getAll().then(setServices).catch(console.error);
     staffApi.getAll().then(setStaffs).catch(console.error);
@@ -40,7 +40,7 @@ export default function BookingCard({ booking, onReschedule, onCancel }) {
   const staff = staffs.find((s) => s.id === booking.staffId);
   const staffName = staff?.userName || booking.staffId;
 
-  // ✅ Chỉ cho đổi / hủy khi status = Pending (Chờ xác nhận)
+  // Chỉ cho đổi / hủy khi status = Pending (Chờ xác nhận)
   const canModify = booking.status === "Pending";
 
   const disabledBtnClass = !canModify

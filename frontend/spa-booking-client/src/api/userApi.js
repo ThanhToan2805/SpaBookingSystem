@@ -6,9 +6,9 @@ export const userApi = {
 
   getAll: () => axiosClient.get("users"),
 
-  // ✅ Admin create user
+  // Admin create user
   create: (data) => axiosClient.post("users", data),
 
-  // ✅ Admin delete user
+  // Admin delete user
   delete: (id) => axiosClient.delete(`users/${id}`),
 };

@@ -2,7 +2,6 @@ import axiosClient from "./axiosClient";
 
 export const staffApi = {
   // GET: api/staffs
-  // Có thể truyền thêm query filter sau này (position, paging...)
   getAll: (params) => axiosClient.get("staffs", { params }),
 
   // GET: api/staffs/{id}
@@ -14,7 +13,6 @@ export const staffApi = {
 
   // PUT: api/staffs/{id}
   // body: { id, position, isAvailable }
-  // Tự chèn id vào body để không bị "Id mismatch"
   update: (id, data) =>
     axiosClient.put(`staffs/${id}`, { ...data, id }),
 
@@ -44,7 +42,6 @@ export const staffApi = {
     }),
 
   // PUT: api/staffs/{staffId}/working-hours
-  // body: UpdateStaffWorkingHoursCommand (auto nhét StaffId)
   updateWorkingHours: (staffId, data) =>
     axiosClient.put(`staffs/${staffId}/working-hours`, {
       ...data,
