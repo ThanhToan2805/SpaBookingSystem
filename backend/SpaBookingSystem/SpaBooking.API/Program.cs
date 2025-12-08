@@ -12,6 +12,7 @@ using SpaBooking.Application.Common;
 using SpaBooking.Application.Interfaces.Services;
 using SpaBooking.Infrastructure;
 using SpaBooking.Infrastructure.Services;
+using SpaBooking.Infrastructure.SignalR;
 using SpaBooking.Persistence.Contexts;
 using SpaBooking.Persistence.Repositories;
 using SpaBooking.Persistence.Services;
@@ -84,6 +85,7 @@ builder.Services.Scan(scan => scan
 // Register Services
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddSignalR();
 
 // Bind config VNPay
 builder.Services.Configure<VnPaySettings>(builder.Configuration.GetSection("VnPay"));
@@ -148,5 +150,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<BookingHub>("/hubs/booking");
 
 app.Run();

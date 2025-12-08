@@ -6,6 +6,7 @@ import { paymentApi } from "../../api/paymentApi";
 import BookingCard from "../../components/UI/BookingCard";
 import Modal from "../../components/UI/Modal";
 import { useAuth } from "../../contexts/AuthContext";
+import { useBookingHub } from "../../hooks/useBookingHub";
 
 export default function MyBookings() {
   const { user } = useAuth();
@@ -92,6 +93,25 @@ export default function MyBookings() {
       alert("Lỗi tạo payment: " + err.message);
     }
   };
+
+  useBookingHub(user?.UserId, {
+    onCreated: (payload) => {
+      if (payload.customerId && payload.customerId !== user?.UserId) return;
+      reloadBookings();
+    },
+    onUpdated: (payload) => {
+      if (payload.customerId && payload.customerId !== user?.UserId) return;
+      reloadBookings();
+    },
+    onCancelled: (payload) => {
+      if (payload.customerId && payload.customerId !== user?.UserId) return;
+      reloadBookings();
+    },
+    onRescheduled: (payload) => {
+      if (payload.customerId && payload.customerId !== user?.UserId) return;
+      reloadBookings();
+    },
+  });
 
   return (
     <LayoutWrapper>

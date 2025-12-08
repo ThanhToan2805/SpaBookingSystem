@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpaBooking.Application.Interfaces.Repositories;
+using SpaBooking.Application.Interfaces.Notifications;
 using SpaBooking.Application.Requests.Bookings;
 using SpaBooking.Contracts.DTOs.Bookings;
 using SpaBooking.Domain.Entities;
@@ -13,17 +14,20 @@ namespace SpaBooking.Application.UseCases.Bookings
         private readonly IStaffRepository _staffRepo;
         private readonly ITimeSlotRepository _timeSlotRepo;
         private readonly IServiceRepository _serviceRepo;
+        private readonly IBookingNotificationService _notification;
 
         public RescheduleBookingHandler(
             IBookingRepository bookingRepo,
             IStaffRepository staffRepo,
             ITimeSlotRepository timeSlotRepo,
-            IServiceRepository serviceRepo)
+            IServiceRepository serviceRepo,
+            IBookingNotificationService notification)
         {
             _bookingRepo = bookingRepo;
             _staffRepo = staffRepo;
             _timeSlotRepo = timeSlotRepo;
             _serviceRepo = serviceRepo;
+            _notification = notification;
         }
 
         public async Task<BookingDto> Handle(RescheduleBookingCommand request, CancellationToken cancellationToken)
@@ -138,6 +142,8 @@ namespace SpaBooking.Application.UseCases.Bookings
 
                 await _timeSlotRepo.AddAsync(createdSlot);
             }
+
+            await _notification.BookingRescheduledAsync(booking);
 
             // Trả về BookingDto
             return new BookingDto

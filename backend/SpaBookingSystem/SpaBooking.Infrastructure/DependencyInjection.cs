@@ -1,8 +1,11 @@
 ﻿using CloudinaryDotNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SpaBooking.Application.Interfaces.Notifications;
 using SpaBooking.Application.Interfaces.Services;
+using SpaBooking.Infrastructure.BackgroundJobs;
 using SpaBooking.Infrastructure.Services;
+using SpaBooking.Infrastructure.SignalR;
 
 namespace SpaBooking.Infrastructure
 {
@@ -19,6 +22,10 @@ namespace SpaBooking.Infrastructure
 
             services.AddSingleton(cloudinary);
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+            services.AddScoped<IBookingNotificationService, SignalRBookingNotificationService>();
+
+            services.AddHostedService<BookingAutoCompleteService>();
 
             return services;
         }

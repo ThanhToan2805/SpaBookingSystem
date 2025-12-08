@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SpaBooking.Application.Interfaces.Repositories;
+using SpaBooking.Application.Interfaces.Notifications;
 using SpaBooking.Application.Requests.Bookings;
 using SpaBooking.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,13 @@ namespace SpaBooking.Application.UseCases.Bookings
     {
         private readonly IBookingRepository _bookingRepo;
         private readonly ITimeSlotRepository _timeSlotRepo;
+        private readonly IBookingNotificationService _notification;
 
-        public CancelBookingHandler(IBookingRepository bookingRepo, ITimeSlotRepository timeSlotRepo)
+        public CancelBookingHandler(IBookingRepository bookingRepo, ITimeSlotRepository timeSlotRepo, IBookingNotificationService notification)
         {
             _bookingRepo = bookingRepo;
             _timeSlotRepo = timeSlotRepo;
+            _notification = notification;
         }
 
         public async Task<bool> Handle(CancelBookingCommand request, CancellationToken cancellationToken)
@@ -44,6 +47,8 @@ namespace SpaBooking.Application.UseCases.Bookings
             booking.Note = request.Dto?.Reason ?? booking.Note;
 
             await _bookingRepo.UpdateAsync(booking);
+
+            await _notification.BookingCancelledAsync(booking);
 
             return true;
         }

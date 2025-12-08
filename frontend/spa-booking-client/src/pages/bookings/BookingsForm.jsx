@@ -37,7 +37,13 @@ export default function BookingsForm() {
 
   useEffect(() => {
     serviceApi.getAll().then(setServices).catch(console.error);
-    staffApi.getAll().then(setStaffs).catch(console.error);
+    staffApi
+    .getAll()
+    .then((res) => {
+      const activeStaffs = (res || []).filter((p) => p.isAvailable);
+      setStaffs(activeStaffs);
+    })
+    .catch(console.error);
     promotionApi
     .getAll()
     .then((res) => {

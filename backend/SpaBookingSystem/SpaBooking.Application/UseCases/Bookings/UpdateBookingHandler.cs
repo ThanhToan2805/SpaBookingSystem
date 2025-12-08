@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SpaBooking.Application.Common;
 using SpaBooking.Application.Interfaces.Repositories;
+using SpaBooking.Application.Interfaces.Notifications;
 using SpaBooking.Application.Requests.Bookings;
 using SpaBooking.Domain.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
@@ -16,6 +17,7 @@ namespace SpaBooking.Application.UseCases.Bookings
         private readonly IServiceRepository _serviceRepo;
         private readonly IPromotionRepository _promotionRepo;
         private readonly BookingValidationService _validation;
+        private readonly IBookingNotificationService _notification;
 
         public UpdateBookingHandler(
             IBookingRepository bookingRepo,
@@ -23,7 +25,8 @@ namespace SpaBooking.Application.UseCases.Bookings
             ITimeSlotRepository timeSlotRepo,
             IServiceRepository serviceRepo,
             IPromotionRepository promotionRepo,
-            BookingValidationService validation)
+            BookingValidationService validation,
+            IBookingNotificationService notification)
         {
             _bookingRepo = bookingRepo;
             _staffRepo = staffRepo;
@@ -31,6 +34,7 @@ namespace SpaBooking.Application.UseCases.Bookings
             _serviceRepo = serviceRepo;
             _promotionRepo = promotionRepo;
             _validation = validation;
+            _notification = notification;
         }
 
         public async Task<bool> Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
@@ -175,6 +179,9 @@ namespace SpaBooking.Application.UseCases.Bookings
             booking.FinalPrice = finalPrice;
 
             await _bookingRepo.UpdateAsync(booking);
+
+            await _notification.BookingUpdatedAsync(booking);
+
             return true;
         }
     }

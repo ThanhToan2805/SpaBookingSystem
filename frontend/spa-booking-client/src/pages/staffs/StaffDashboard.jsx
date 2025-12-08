@@ -4,6 +4,7 @@ import { staffApi } from "../../api/staffApi";
 import { serviceApi } from "../../api/serviceApi";
 import { userApi } from "../../api/userApi";
 import StaffLayout from "./layout/StaffLayout";
+import {useBookingHub} from "../../hooks/useBookingHub";
 
 function toDateInputValue(date) {
   return date.toISOString().slice(0, 10); // yyyy-MM-dd
@@ -239,6 +240,44 @@ export default function StaffDashboard() {
       loadUpcomingBookings();
     }
   }, [staff, selectedDate]);
+
+  // Lắng nghe SignalR cho staff hiện tại
+  useBookingHub(user?.UserId, {
+    onCreated: (payload) => {
+      // Nếu booking không phải của staff này thì thôi
+      if (payload.staffId && payload.staffId !== staff?.id) return;
+
+      console.log("Lịch của bạn vừa được tạo mới:", payload);
+
+      // Reload lại lịch + overview
+      loadTodayData();
+      loadOverview();
+    },
+    onUpdated: (payload) => {
+      if (payload.staffId && payload.staffId !== staff?.id) return;
+
+      console.log("Lịch của bạn vừa được cập nhật:", payload);
+
+      loadTodayData();
+      loadOverview();
+    },
+    onCancelled: (payload) => {
+      if (payload.staffId && payload.staffId !== staff?.id) return;
+
+      console.log("Lịch của bạn vừa bị hủy:", payload);
+
+      loadTodayData();
+      loadOverview();
+    },
+    onRescheduled: (payload) => {
+      if (payload.staffId && payload.staffId !== staff?.id) return;
+
+      console.log("Lịch của bạn vừa được thay đổi:", payload);
+
+      loadTodayData();
+      loadOverview();
+    },
+  });
 
   // 4. Toggle availability
   const handleToggleAvailability = async () => {
