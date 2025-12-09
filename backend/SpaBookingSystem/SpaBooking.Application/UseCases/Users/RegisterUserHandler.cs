@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SpaBooking.Application.Interfaces;
+using SpaBooking.Application.Common.Exceptions;
 using SpaBooking.Application.Interfaces.Repositories;
 using SpaBooking.Application.Requests.Users;
 using SpaBooking.Domain.Entities;
@@ -22,14 +23,14 @@ namespace SpaBooking.Application.UseCases.Users
         {
             var isEmailExists = await _userRepository.GetByEmailAsync(request.Email);
             if (isEmailExists != null)
-                throw new Exception("Email already exists");
+                throw new ConflictException("Email đã được đăng ký");
 
             var isUsernameExists = await _userRepository.GetByUsernameAsync(request.Username);
             if (isUsernameExists != null)
-                throw new Exception("Username already exists");
+                throw new ConflictException("Username đã được đăng ký");
 
             var userRole = await _roleRepository.GetByNameAsync("Customer")
-                           ?? throw new Exception("Default role not found");
+                           ?? throw new NotFoundException("Default role not found");
 
             var user = new User
             {

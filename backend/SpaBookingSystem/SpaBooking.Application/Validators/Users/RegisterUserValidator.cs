@@ -7,12 +7,15 @@ namespace SpaBooking.Application.Validators
     {
         public RegisterUserValidator()
         {
-            RuleFor(x => x.Username).NotEmpty().WithMessage("Username is required");
-            RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage("Valid email is required");
+            RuleFor(x => x.Username).NotEmpty().WithMessage("Username không được để trống");
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email không được để trống")
+                .EmailAddress().WithMessage("Email không hợp lệ.");
             RuleFor(x => x.Password)
-                .MinimumLength(6).WithMessage("Password must be at least 6 characters");
+                .NotEmpty().WithMessage("Mật khẩu không được để trống.")
+                .MinimumLength(6).WithMessage("Mật khẩu phải có ít nhất 6 kí tự. Vui lòng nhập lại");
             RuleFor(x => x.ConfirmPassword)
-                .Equal(x => x.Password).WithMessage("Password and ConfirmPassword must match");
+                .Equal(x => x.Password).WithMessage("Mật khẩu và Xác nhận mật khẩu không khớp. Vui lòng nhập lại");
         }
     }
 }

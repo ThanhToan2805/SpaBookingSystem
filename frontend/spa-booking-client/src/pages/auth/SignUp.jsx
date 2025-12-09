@@ -20,11 +20,11 @@ export default function SignUp() {
         confirmPassword: data.confirmPassword,
       };
       await authApi.register(payload);
-      alert("Registration successful! Please login.");
+      alert("Đăng ký tài khoản thành công! Vui lòng đăng nhập.");
       navigate("/auth/signin");
     } catch (err) {
       alert(
-        "Registration failed: " +
+        "Đăng ký thất bại: " +
           (err.response?.data?.message || err.message)
       );
     }

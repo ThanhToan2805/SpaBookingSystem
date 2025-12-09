@@ -26,16 +26,8 @@ namespace SpaBooking.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginUserQuery query)
         {
-            try
-            {
-                var token = await _mediator.Send(query);
-                return Ok(new { Token = token });
-            }
-            catch (Exception ex)
-            {
-                // Trả về 400 Bad Request nếu login thất bại
-                return BadRequest(new { message = ex.Message });
-            }
+            var token = await _mediator.Send(query);
+            return Ok(new { Token = token });
         }
 
         [Authorize]

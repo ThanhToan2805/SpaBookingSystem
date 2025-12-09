@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SpaBooking.API.Settings;
 using SpaBooking.API.Services;
+using SpaBooking.API.Middlewares;
 using SpaBooking.Application;
 using SpaBooking.Application.Behaviors;
 using SpaBooking.Application.Common;
@@ -96,8 +96,6 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 // Add Infrastructure (e.g., Cloudinary)
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddTransient<BookingValidationService>();
 
@@ -142,6 +140,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors("AllowAll");
 

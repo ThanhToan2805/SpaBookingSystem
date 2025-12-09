@@ -34,7 +34,7 @@ export default function SignIn() {
     } catch (err) {
       console.error("Login error:", err);
       alert(
-        "Login failed: " +
+        "Đăng nhập thất bại: " +
           (err.response?.data?.message || err.message)
       );
     }
