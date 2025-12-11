@@ -87,7 +87,7 @@ export default function BookingsForm() {
 
   const onSubmit = async (data) => {
     const service = services.find((s) => s.id === data.serviceId);
-    if (!service) return alert("Service not found");
+    if (!service) return alert("Không tìm thấy dịch vụ");
 
     const startAt = new Date(data.startAt);
     const endAt = new Date(
@@ -97,7 +97,7 @@ export default function BookingsForm() {
     const token = getToken();
     const decoded = decodeToken(token);
     const customerId = decoded?.UserId;
-    if (!customerId) return alert("User not logged in");
+    if (!customerId) return alert("Chưa đăng nhập! Vui lòng đăng nhập");
 
     if (!data.paymentMethod) return alert("Chọn phương thức thanh toán!");
 
@@ -127,7 +127,20 @@ export default function BookingsForm() {
         },
       });
     } catch (err) {
-      alert("Booking failed: " + err.message);
+      console.error("Booking error:", err);
+
+      // Nếu là lỗi từ Axios
+      const res = err.response;
+      const data = res?.data;
+
+      const backendMessage =
+        data?.message ||
+        (Array.isArray(data?.errors) ? data.errors.join(" | ") : null);
+
+      alert(
+        "Đặt lịch thất bại: " +
+          (backendMessage || err.message || "Có lỗi xảy ra, vui lòng thử lại.")
+      );
     }
   };
 

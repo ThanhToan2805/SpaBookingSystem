@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using FluentValidation;
 using SpaBooking.Application.Common.Exceptions;
 
 namespace SpaBooking.API.Middlewares
@@ -32,12 +33,26 @@ namespace SpaBooking.API.Middlewares
                     UnauthorizedException un => (HttpStatusCode.Unauthorized, "UNAUTHORIZED", un.Message),
                     ConflictException cf => (HttpStatusCode.Conflict, "CONFLICT", cf.Message),
 
-                    // FluentValidation
-                    FluentValidation.ValidationException vEx => (HttpStatusCode.BadRequest, "VALIDATION_ERROR",
-                        string.Join(" | ", vEx.Errors.Select(e => e.ErrorMessage))),
+                    // Lỗi validate input (FluentValidation - RuleFor)
+                    ValidationException vEx => (
+                        HttpStatusCode.BadRequest,
+                        "VALIDATION_ERROR",
+                        string.Join(" | ", vEx.Errors.Select(e => e.ErrorMessage))
+                    ),
 
-                    _ => (HttpStatusCode.InternalServerError, "INTERNAL_SERVER_ERROR",
-                        "Đã xảy ra lỗi hệ thống.")
+                    // Lỗi validate booking (thời gian, staff, slot...)
+                    BookingValidationException bEx => (
+                        HttpStatusCode.BadRequest,
+                        "BOOKING_VALIDATION_ERROR",
+                        string.Join(" | ", bEx.Errors)
+                    ),
+
+                    // Các lỗi còn lại
+                    _ => (
+                        HttpStatusCode.InternalServerError,
+                        "INTERNAL_SERVER_ERROR",
+                        "Đã xảy ra lỗi hệ thống."
+                    )
                 };
 
                 context.Response.StatusCode = (int)statusCode;

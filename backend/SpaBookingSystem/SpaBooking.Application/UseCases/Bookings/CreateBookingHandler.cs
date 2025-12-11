@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpaBooking.Application.Common;
+using SpaBooking.Application.Common.Exceptions;
 using SpaBooking.Application.Interfaces.Repositories;
 using SpaBooking.Application.Interfaces.Notifications;
 using SpaBooking.Application.Requests.Bookings;
@@ -47,7 +48,7 @@ namespace SpaBooking.Application.UseCases.Bookings
                 .FirstOrDefaultAsync(s => s.Id == dto.ServiceId && s.IsActive, cancellationToken);
 
             if (service == null)
-                throw new Exception("Service not found or inactive.");
+                throw new NotFoundException("Không tìm thấy dịch vụ.");
 
             // Tính giá cuối cùng với khuyến mãi (nếu có)
             Promotion? promotion = null;
@@ -90,7 +91,7 @@ namespace SpaBooking.Application.UseCases.Bookings
             errors.AddRange(_validation.ValidateWorkingHours(startLocal, endLocal));
 
             if (errors.Any())
-                throw new Exception(string.Join("; ", errors));
+                throw new BookingValidationException(errors);
 
             // Chọn staff
             Guid staffId;
@@ -102,7 +103,7 @@ namespace SpaBooking.Application.UseCases.Bookings
                     .FirstOrDefaultAsync(s => s.Id == dto.StaffId.Value && s.IsAvailable, cancellationToken);
 
                 if (staffAvailable == null)
-                    throw new Exception("Staff not available.");
+                    throw new BookingValidationException("Nhân viên không khả dụng trong khoảng thời gian này.");
 
                 var conflict = staffAvailable.TimeSlots.Any(ts =>
                     ts.StartAt < endAt &&
@@ -110,7 +111,7 @@ namespace SpaBooking.Application.UseCases.Bookings
                     ts.BookingId != null);
 
                 if (conflict)
-                    throw new Exception("Staff has conflicting booking.");
+                    throw new BookingValidationException("Nhân viên đã có lịch trong khoảng thời gian này.");
 
                 staffId = dto.StaffId.Value;
             }
@@ -128,7 +129,7 @@ namespace SpaBooking.Application.UseCases.Bookings
                         cancellationToken);
 
                 if (candidate == null)
-                    throw new Exception("No available staff for the requested time.");
+                    throw new BookingValidationException("Không tìm được nhân viên phù hợp cho khung giờ yêu cầu.");
 
                 staffId = candidate.Id;
             }
@@ -136,7 +137,7 @@ namespace SpaBooking.Application.UseCases.Bookings
             // Kiểm tra slot và xung đột booking
             var overlapping = await _validation.HasOverlappingSlotAsync(staffId, startAt, endAt, _timeSlotRepo.Query());
             if (overlapping)
-                throw new Exception("Slot already booked.");
+                throw new BookingValidationException("Khung giờ này đã được đặt trước.");
 
             // Tạo booking trước
             var booking = new Booking
