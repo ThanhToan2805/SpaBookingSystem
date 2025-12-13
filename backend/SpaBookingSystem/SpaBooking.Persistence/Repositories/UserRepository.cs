@@ -57,5 +57,10 @@ namespace SpaBooking.Persistence.Repositories
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public IQueryable<User> Query()
+        {
+            return _context.Users.AsNoTracking();
+        }
     }
 }

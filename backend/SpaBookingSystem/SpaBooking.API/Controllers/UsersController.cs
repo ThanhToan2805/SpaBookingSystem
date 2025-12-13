@@ -61,5 +61,14 @@ namespace SpaBooking.API.Controllers
             await _mediator.Send(new DeleteUserCommand { Id = id });
             return NoContent();
         }
+
+        // GET /api/users/eligible-staffs
+        [HttpGet("eligible-staffs")]
+        [Authorize(Roles = "Admin")] // nếu bạn đang dùng claim role = Admin
+        public async Task<IActionResult> GetEligibleStaffUsers()
+        {
+            var result = await _mediator.Send(new GetEligibleStaffUsersQuery());
+            return Ok(result);
+        }
     }
 }

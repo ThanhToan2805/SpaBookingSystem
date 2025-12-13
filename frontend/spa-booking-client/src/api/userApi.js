@@ -11,4 +11,6 @@ export const userApi = {
 
   // Admin delete user
   delete: (id) => axiosClient.delete(`users/${id}`),
+
+  getEligibleStaffUsers: () => axiosClient.get("users/eligible-staffs"),
 };

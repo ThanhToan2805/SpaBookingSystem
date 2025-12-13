@@ -12,5 +12,6 @@ namespace SpaBooking.Application.Interfaces.Repositories
         Task<bool> SaveChangesAsync();
         Task<IEnumerable<User>> GetAllAsync();
         Task<User?> GetByIdAsync(Guid id);
+        IQueryable<User> Query();
     }
 }
