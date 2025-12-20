@@ -19,7 +19,7 @@ export default function StaffLayout({ children, title }) {
       {/* Sidebar */}
       <aside className="hidden md:flex md:w-64 lg:w-72 flex-col border-r border-slate-200 bg-white/80 backdrop-blur">
         <div className="h-16 flex items-center px-6 border-b border-slate-200">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/staff/dashboard" className="flex items-center gap-2">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-purple-600 text-white font-bold text-lg">
               L
             </span>

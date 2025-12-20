@@ -45,33 +45,33 @@ export default function SignIn() {
       <div className="min-h-[70vh] flex items-center justify-center bg-linear-to-br from-purple-50 via-white to-purple-100 py-10">
         <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-purple-50">
           <h2 className="text-3xl font-bold mb-2 text-center text-purple-700">
-            Sign In
+            Đăng Nhập
           </h2>
           <p className="text-sm text-gray-500 text-center mb-6">
-            Welcome back to LumiSpa. Please log in to manage your bookings.
+            Chào mừng bạn đến với LumiSpa. Vui lòng đăng nhập để sử dụng dịch vụ.
           </p>
 
           <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700">
-                Username or Email
+                Username hoặc Email
               </label>
               <input
                 {...register("username")}
-                placeholder="Enter username or email"
+                placeholder="Nhập username hoặc email"
                 className="border border-gray-300 p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               />
             </div>
 
             <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700">
-                Password
+                Mật khẩu
               </label>
               <div className="relative">
                 <input
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Nhập mật khẩu"
                   className="border border-gray-300 p-3 rounded-lg w-full pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <button
@@ -92,7 +92,7 @@ export default function SignIn() {
               type="submit"
               className="bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition"
             >
-              Login
+              Đăng nhập
             </button>
           </form>
 
@@ -101,17 +101,17 @@ export default function SignIn() {
               to="/auth/forgot-password"
               className="text-sm text-purple-600 hover:underline"
             >
-              Forgot your password?
+              Quên mật khẩu ?
             </Link>
           </p>
 
           <p className="mt-6 text-center text-gray-600 text-sm">
-            Don&apos;t have an account?{" "}
+            Chưa có tài khoản?{" "}
             <Link
               to="/auth/signup"
               className="text-purple-600 font-medium hover:underline"
             >
-              Sign Up
+              Đăng Ký
             </Link>
           </p>
         </div>

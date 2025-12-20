@@ -35,10 +35,10 @@ export default function SignUp() {
       <div className="min-h-[70vh] flex items-center justify-center bg-linear-to-br from-purple-50 via-white to-purple-100 py-10">
         <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-purple-50">
           <h2 className="text-3xl font-bold mb-2 text-center text-purple-700">
-            Create Account
+            Đăng Ký
           </h2>
           <p className="text-sm text-gray-500 text-center mb-6">
-            Join LumiSpa to book and manage your spa experiences easily.
+            Đăng ký tài khoản hệ thống LumiSpa để sử dụng dịch vụ.
           </p>
 
           <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
@@ -67,13 +67,13 @@ export default function SignUp() {
 
             <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700">
-                Password
+                Mật khẩu
               </label>
               <div className="relative">
                 <input
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  placeholder="Mật khẩu"
                   className="border border-gray-300 p-2.5 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <button
@@ -92,13 +92,13 @@ export default function SignUp() {
 
             <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700">
-                Confirm Password
+                Xác nhận mật khẩu
               </label>
               <div className="relative">
                 <input
                   {...register("confirmPassword")}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Confirm Password"
+                  placeholder="Xác nhận mật khẩu"
                   className="border border-gray-300 p-2.5 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <button
@@ -119,17 +119,17 @@ export default function SignUp() {
               type="submit"
               className="bg-purple-600 text-white py-2.5 rounded-lg hover:bg-purple-700 font-medium transition"
             >
-              Register
+              Đăng ký
             </button>
           </form>
 
           <p className="mt-4 text-center text-sm text-gray-600">
-            Already have an account?{" "}
+            Đã có tài khoản?{" "}
             <Link
               to="/auth/signin"
               className="text-purple-600 font-medium hover:underline"
             >
-              Sign In
+              Đăng Nhập
             </Link>
           </p>
         </div>

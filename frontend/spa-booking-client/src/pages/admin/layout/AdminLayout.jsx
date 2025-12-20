@@ -94,16 +94,6 @@ export default function AdminLayout({ children, title }) {
           </NavLink>
 
           <NavLink
-            to="/admin/roles"
-            className={({ isActive }) =>
-              `${navItemBase} ${isActive ? navItemActive : navItemInactive}`
-            }
-          >
-            <span>🛡️</span>
-            <span>Quản lý Role</span>
-          </NavLink>
-
-          <NavLink
             to="/admin/promotions"
             className={({ isActive }) =>
               `${navItemBase} ${isActive ? navItemActive : navItemInactive}`

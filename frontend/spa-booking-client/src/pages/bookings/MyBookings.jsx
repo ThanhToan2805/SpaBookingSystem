@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LayoutWrapper from "../../components/Layout/LayoutWrapper";
 import { bookingApi } from "../../api/bookingApi";
@@ -20,6 +20,10 @@ export default function MyBookings() {
   const [newStartAt, setNewStartAt] = useState("");
   const [cancelReason, setCancelReason] = useState("");
 
+  // filter status
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortMode, setSortMode] = useState("NEWEST"); 
+
   useEffect(() => {
     if (user) reload();
   }, [user]);
@@ -27,14 +31,86 @@ export default function MyBookings() {
   const reload = async () => {
     try {
       const all = await bookingApi.getAll();
-      const my = all.filter(
-        (b) => String(b.customerId) === String(user.UserId)
-      );
+      const my = all.filter((b) => String(b.customerId) === String(user.UserId));
       setBookings(my);
     } catch (err) {
       console.error("Lỗi load booking:", err);
     }
   };
+
+  // map status để hiển thị dropdown thân thiện
+  const statusOptions = [
+    { value: "All", label: "Tất cả" },
+    { value: "Pending", label: "Chờ xác nhận" },
+    { value: "Confirmed", label: "Đã xác nhận" },
+    { value: "Cancelled", label: "Đã hủy" },
+    { value: "Completed", label: "Hoàn thành" },
+    { value: "NoShow", label: "Không đến" },
+  ];
+
+  // danh sách sau khi lọc
+  const displayBookings = useMemo(() => {
+  const list = statusFilter === "All"
+    ? [...bookings]
+    : bookings.filter((b) => b.status === statusFilter);
+
+  const getTime = (b) => {
+    // ưu tiên createdAt, fallback startAt, fallback endAt
+    const t =
+      b.createdAt || b.startAt || b.endAt || b.updatedAt || null;
+    const ms = t ? new Date(t).getTime() : NaN;
+    // fallback cuối: id (nếu id là số tăng dần)
+    if (!Number.isFinite(ms)) return Number(b.id) || 0;
+    return ms;
+  };
+
+  const now = Date.now();
+
+  switch (sortMode) {
+    case "OLDEST":
+      return list.sort((a, c) => getTime(a) - getTime(c));
+
+    case "UPCOMING":
+      // ưu tiên lịch sắp tới gần nhất, còn quá khứ đẩy xuống
+      return list.sort((a, c) => {
+        const ta = new Date(a.startAt).getTime();
+        const tc = new Date(c.startAt).getTime();
+        const da = ta - now;
+        const dc = tc - now;
+
+        const aFuture = da >= 0;
+        const cFuture = dc >= 0;
+
+        if (aFuture && !cFuture) return -1;
+        if (!aFuture && cFuture) return 1;
+
+        // cùng tương lai: gần nhất lên đầu; cùng quá khứ: gần đây nhất lên đầu
+        return aFuture ? da - dc : tc - ta;
+      });
+
+    case "RECENT_PAST":
+      // ưu tiên booking quá khứ gần đây nhất (đã diễn ra) lên đầu, tương lai xuống
+      return list.sort((a, c) => {
+        const ta = new Date(a.startAt).getTime();
+        const tc = new Date(c.startAt).getTime();
+        const da = ta - now;
+        const dc = tc - now;
+
+        const aPast = da < 0;
+        const cPast = dc < 0;
+
+        if (aPast && !cPast) return -1;
+        if (!aPast && cPast) return 1;
+
+        // cùng quá khứ: gần đây nhất lên đầu; cùng tương lai: gần nhất lên đầu
+        return aPast ? tc - ta : da - dc;
+      });
+
+    case "NEWEST":
+    default:
+      return list.sort((a, c) => getTime(c) - getTime(a));
+  }
+}, [bookings, statusFilter, sortMode]);
 
   const handleReschedule = (booking) => {
     setSelectedBooking(booking);
@@ -72,13 +148,8 @@ export default function MyBookings() {
 
   const handlePay = async (booking) => {
     try {
-      // Lấy payment theo booking
       const payments = await paymentApi.getByBooking(booking.id);
-      console.log("Payments fetched:", payments);
-
-      if (!payments || payments.length === 0) {
-        return alert("Payment not found");
-      }
+      if (!payments || payments.length === 0) return alert("Payment not found");
 
       const paymentData = payments[0];
 
@@ -97,31 +168,74 @@ export default function MyBookings() {
   useBookingHub(user?.UserId, {
     onCreated: (payload) => {
       if (payload.customerId && payload.customerId !== user?.UserId) return;
-      reloadBookings();
+      reload(); // ✅ FIX: reloadBookings -> reload
     },
     onUpdated: (payload) => {
       if (payload.customerId && payload.customerId !== user?.UserId) return;
-      reloadBookings();
+      reload();
     },
     onCancelled: (payload) => {
       if (payload.customerId && payload.customerId !== user?.UserId) return;
-      reloadBookings();
+      reload();
     },
     onRescheduled: (payload) => {
       if (payload.customerId && payload.customerId !== user?.UserId) return;
-      reloadBookings();
+      reload();
     },
   });
 
   return (
     <LayoutWrapper>
       <div className="py-8">
-        <h2 className="text-4xl font-bold mb-2 text-gray-800 text-center">
-          Lịch đặt của tôi
-        </h2>
-        <p className="text-center text-gray-500 mb-8 text-sm">
-          Theo dõi, đổi lịch hoặc hủy các buổi hẹn tại LumiSpa.
-        </p>
+        <div className="mb-6">
+          <h2 className="text-4xl font-bold text-gray-800 text-center">
+            Lịch đặt của tôi
+          </h2>
+          <p className="text-center text-gray-500 mt-2 text-sm">
+            Theo dõi, đổi lịch hoặc hủy các buổi hẹn tại LumiSpa.
+          </p>
+        </div>
+
+        <div className="mb-6">
+          <div className="bg-white border border-gray-100 shadow-sm rounded-2xl px-4 py-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              {/* Left: Status filter */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-semibold text-gray-700">
+                  Trạng thái
+                </span>
+
+                <select
+                  value={sortMode}
+                  onChange={(e) => setSortMode(e.target.value)}
+                  className="text-sm border border-gray-200 rounded-xl px-3 py-2
+                            focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+                >
+                  <option value="NEWEST">Mới nhất</option>
+                  <option value="OLDEST">Cũ nhất</option>
+                  <option value="UPCOMING">Sắp diễn ra</option>
+                  <option value="RECENT_PAST">Đã diễn ra gần đây</option>
+                </select>
+              </div>
+
+              {/* Right: Count + Reset */}
+              <div className="flex items-center justify-between sm:justify-end gap-3">
+                <span className="text-xs text-gray-500">
+                  Hiển thị <b className="text-gray-700">{displayBookings.length}</b> /
+                  <b className="text-gray-700"> {bookings.length}</b> booking
+                </span>
+
+                <button
+                  onClick={() => setStatusFilter("All")}
+                  className="text-sm font-medium px-3 py-2 rounded-xl border border-gray-200
+                            hover:bg-gray-50 transition"
+                >
+                  Đặt lại
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {bookings.length === 0 ? (
           <div className="flex flex-col items-center mt-16">
@@ -129,9 +243,15 @@ export default function MyBookings() {
               Bạn chưa có booking nào.
             </p>
           </div>
+        ) : displayBookings.length === 0 ? (
+          <div className="flex flex-col items-center mt-16">
+            <p className="text-gray-500 text-lg mb-4">
+              Không có booking nào phù hợp với trạng thái đã chọn.
+            </p>
+          </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {bookings.map((b) => (
+            {displayBookings.map((b) => (
               <BookingCard
                 key={b.id}
                 booking={{ ...b, onPay: handlePay }}

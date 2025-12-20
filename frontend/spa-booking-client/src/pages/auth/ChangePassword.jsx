@@ -91,10 +91,10 @@ export default function ChangePassword() {
       <div className="min-h-[70vh] flex items-center justify-center bg-linear-to-br from-purple-50 via-white to-purple-100 py-10">
         <div className="w-full max-w-lg bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-purple-50">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-purple-700 mb-2">
-            Change Password
+            Đổi Mật Khẩu
           </h2>
           <p className="text-center text-gray-500 text-sm mb-6">
-            For your security, please use a strong and unique password.
+            Để bảo mật, Vui lòng sử dụng mật khẩu mạnh và độc nhất.
           </p>
 
           {msg && (
@@ -112,18 +112,18 @@ export default function ChangePassword() {
           <form onSubmit={onSubmit} className="space-y-4">
             {renderPasswordInput(
               "oldPassword",
-              "Current Password",
-              "Enter your current password"
+              "Mật khẩu hiện tại",
+              "Nhập mật khẩu hiện tại"
             )}
             {renderPasswordInput(
               "newPassword",
-              "New Password",
-              "Enter a new password"
+              "Mật khẩu mới",
+              "Nhập mật khẩu mới"
             )}
             {renderPasswordInput(
               "confirmPassword",
-              "Confirm New Password",
-              "Re-enter the new password"
+              "Xác nhận mật khẩu mới",
+              "Nhập xác nhận mật khẩu mới"
             )}
 
             <button
@@ -131,12 +131,11 @@ export default function ChangePassword() {
               className="w-full py-2.5 mt-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition disabled:bg-purple-400"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Change Password"}
+              {loading ? "Saving..." : "Đổi mật khẩu"}
             </button>
 
             <p className="text-xs text-gray-400 mt-2">
-              Tip: Use at least 8 characters, including letters, numbers and
-              symbols to make your password stronger.
+              Mẹo: Sử dụng mật khẩu có ít nhất 8 ký tự gồm chữ, số và ký tự đặc biệt để đảm bảo an toàn.
             </p>
           </form>
         </div>

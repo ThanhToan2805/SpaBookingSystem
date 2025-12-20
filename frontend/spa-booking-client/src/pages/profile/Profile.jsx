@@ -103,7 +103,7 @@ export default function Profile() {
                       Full Name
                     </p>
                     <p className="text-sm font-semibold text-gray-900">
-                      {user.fullName || "Not set"}
+                      {user.fullName || "Chưa cập nhật"}
                     </p>
                   </div>
 
@@ -112,7 +112,7 @@ export default function Profile() {
                       Phone Number
                     </p>
                     <p className="text-sm font-semibold text-gray-900">
-                      {user.phoneNumber || "Not set"}
+                      {user.phoneNumber || "Chưa cập nhật"}
                     </p>
                   </div>
                 </div>

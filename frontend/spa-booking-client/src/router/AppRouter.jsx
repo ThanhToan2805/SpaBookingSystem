@@ -264,32 +264,6 @@ export default function AppRouter() {
           }
         />
 
-        {/* ROLE MANAGEMENT */}
-        <Route
-          path="/admin/roles"
-          element={
-            <AdminRoute>
-              <RoleList />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/roles/create"
-          element={
-            <AdminRoute>
-              <RoleForm />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/roles/edit/:id"
-          element={
-            <AdminRoute>
-              <RoleForm />
-            </AdminRoute>
-          }
-        />
-
         {/* PROMOTION MANAGEMENT */}
         <Route
           path="/admin/promotions"

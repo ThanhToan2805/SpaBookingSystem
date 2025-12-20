@@ -56,7 +56,7 @@ export default function ResetPassword() {
       <LayoutWrapper>
         <div className="min-h-[60vh] flex items-center justify-center bg-gray-50">
           <div className="text-center bg-white px-6 py-4 rounded-xl shadow border border-red-100 text-red-600 text-lg font-medium">
-            Invalid password reset link.
+            Liên kết không xác định.
           </div>
         </div>
       </LayoutWrapper>
@@ -71,7 +71,7 @@ export default function ResetPassword() {
           className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-purple-50 space-y-4"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-center text-purple-700">
-            Reset Password
+            Đặt lại mật khẩu
           </h2>
 
           {error && (
@@ -87,14 +87,14 @@ export default function ResetPassword() {
 
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">
-              New Password
+              Mật khẩu mới
             </label>
             <input
               type="password"
               name="newPassword"
               value={form.newPassword}
               onChange={onChange}
-              placeholder="New Password"
+              placeholder="Mật khẩu mới"
               className={`w-full border px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
                 error ? "border-red-300" : "border-gray-300"
               }`}
@@ -104,14 +104,14 @@ export default function ResetPassword() {
 
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">
-              Confirm New Password
+              Xác nhận mật khẩu mới
             </label>
             <input
               type="password"
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={onChange}
-              placeholder="Confirm New Password"
+              placeholder="Xác nhận mật khẩu mới"
               className={`w-full border px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
                 error ? "border-red-300" : "border-gray-300"
               }`}
@@ -124,7 +124,7 @@ export default function ResetPassword() {
             disabled={loading}
             className="w-full bg-purple-600 text-white py-2.5 rounded-lg font-medium hover:bg-purple-700 transition disabled:bg-purple-400"
           >
-            {loading ? "Saving..." : "Reset Password"}
+            {loading ? "Saving..." : "Đặt lại mật khẩu"}
           </button>
         </form>
       </div>

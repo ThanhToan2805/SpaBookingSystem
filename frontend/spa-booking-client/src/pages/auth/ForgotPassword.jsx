@@ -32,11 +32,10 @@ export default function ForgotPassword() {
           className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-purple-50 space-y-4"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-center text-purple-700">
-            Forgot Password
+            Quên mật khẩu
           </h2>
           <p className="text-sm text-gray-500 text-center">
-            Enter your email address and we will send you a link to reset your
-            password.
+            Nhập địa chỉ email của bạn và chúng tôi sẽ gửi liên kết để bạn đặt lại mật khẩu.
           </p>
 
           {msg && (
@@ -57,7 +56,7 @@ export default function ForgotPassword() {
             </label>
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Nhập email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +69,7 @@ export default function ForgotPassword() {
             disabled={loading}
             className="w-full bg-purple-600 text-white py-2.5 rounded-lg font-medium hover:bg-purple-700 transition disabled:bg-purple-400"
           >
-            {loading ? "Sending..." : "Send Reset Link"}
+            {loading ? "Sending..." : "Gửi link reset"}
           </button>
         </form>
       </div>

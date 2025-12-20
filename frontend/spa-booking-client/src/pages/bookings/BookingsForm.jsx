@@ -28,12 +28,17 @@ export default function BookingsForm() {
     discount: 0,
   });
 
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const watchedServiceId = watch("serviceId");
   const watchedPromotionId = watch("promotionId");
   const watchedPaymentMethod = watch("paymentMethod");
+  const watchedDate = watch("date");
+  const watchedStaffId = watch("staffId");
 
   useEffect(() => {
     serviceApi.getAll().then(setServices).catch(console.error);
@@ -85,14 +90,39 @@ export default function BookingsForm() {
     setPriceInfo({ basePrice: base, discount });
   }, [watchedServiceId, watchedPromotionId, services, promotions]);
 
+  // Lấy giờ trống
+  useEffect(() => {
+    if (!watchedDate || !watchedServiceId) {
+      setAvailableSlots([]);
+      setSelectedSlot(null);
+      return;
+    }
+
+    bookingApi
+      .getAvailableSlots({
+        date: watchedDate,
+        serviceId: watchedServiceId,
+        staffId: watchedStaffId || undefined,
+      })
+      .then((res) => {
+        setAvailableSlots(res || []);
+        setSelectedSlot(null);
+      })
+      .catch(() => {
+        setAvailableSlots([]);
+        setSelectedSlot(null);
+      });
+  }, [watchedDate, watchedServiceId, watchedStaffId]);
+
   const onSubmit = async (data) => {
     const service = services.find((s) => s.id === data.serviceId);
     if (!service) return alert("Không tìm thấy dịch vụ");
 
-    const startAt = new Date(data.startAt);
-    const endAt = new Date(
-      startAt.getTime() + service.durationMinutes * 60000
-    );
+    if (!selectedSlot)
+      return alert("Vui lòng chọn khung giờ!");
+
+    const startAt = new Date(selectedSlot.startAt);
+    const endAt = new Date(selectedSlot.endAt);
 
     const token = getToken();
     const decoded = decodeToken(token);
@@ -241,16 +271,56 @@ export default function BookingsForm() {
                   )}
                 </div>
 
+                {/* Chọn ngày */}
                 <div className="space-y-1">
                   <label className="text-sm font-medium text-gray-700">
-                    Thời gian bắt đầu <span className="text-red-500">*</span>
+                    Ngày đặt lịch <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="datetime-local"
-                    {...register("startAt")}
+                    type="date"
+                    {...register("date")}
                     className="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                     required
                   />
+                </div>
+
+                {/* Chọn giờ trống */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Khung giờ trống <span className="text-red-500">*</span>
+                  </label>
+
+                  {availableSlots.length === 0 ? (
+                    <p className="text-sm text-slate-500">
+                      Không có khung giờ phù hợp cho ngày đã chọn
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-2">
+                      {availableSlots.map((slot) => {
+                        const isSelected = selectedSlot?.startAt === slot.startAt;
+                        const timeLabel = new Date(slot.startAt).toLocaleTimeString("vi-VN", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        });
+
+                        return (
+                          <button
+                            key={slot.startAt}
+                            type="button"
+                            onClick={() => setSelectedSlot(slot)}
+                            className={`border rounded-lg px-3 py-2 text-sm transition
+                              ${
+                                isSelected
+                                  ? "bg-purple-600 text-white border-purple-600"
+                                  : "bg-white hover:bg-purple-50 border-gray-300"
+                              }`}
+                          >
+                            {timeLabel}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1">
@@ -393,6 +463,7 @@ export default function BookingsForm() {
 
               <button
                 type="submit"
+                disabled={!selectedSlot}
                 className="mt-6 w-full bg-purple-600 text-white py-2.5 rounded-xl font-semibold hover:bg-purple-700 transition disabled:bg-purple-400"
               >
                 Xác nhận đặt lịch

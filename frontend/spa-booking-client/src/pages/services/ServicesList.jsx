@@ -218,11 +218,11 @@ export default function ServicesList() {
                         : "hover:bg-gray-100"
                     }`}
                   >
-                    Previous
+                    Trước
                   </button>
 
                   <span className="px-4 py-2 font-medium text-sm">
-                    Page {page}
+                    Trang {page}
                   </span>
 
                   {/* NEXT */}
@@ -235,7 +235,7 @@ export default function ServicesList() {
                         : "hover:bg-gray-100"
                     }`}
                   >
-                    Next
+                    Sau
                   </button>
                 </div>
               </>

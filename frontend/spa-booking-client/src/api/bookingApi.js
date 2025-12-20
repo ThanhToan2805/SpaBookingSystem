@@ -22,4 +22,9 @@ export const bookingApi = {
   getByUser: (userId, params) => axiosClient.get(`bookings/user/${userId}`, { params }),
   getByDate: (params) => axiosClient.get("bookings/by-date", { params }),
   getCalendarView: (params) => axiosClient.get("bookings/calendar-view", { params }),
+
+  getAvailableSlots: (params) =>
+    axiosClient.get("/bookings/available-slots", {
+      params, // { date, serviceId, staffId }
+    }),
 };

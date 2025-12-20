@@ -147,5 +147,25 @@ namespace SpaBooking.API.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        [HttpGet("available-slots")]
+        public async Task<IActionResult> GetAvailableSlots(
+            [FromQuery] DateTime date,
+            [FromQuery] Guid serviceId,
+            [FromQuery] Guid? staffId,
+            [FromQuery] int stepMinutes = 30)
+        {
+            var query = new GetAvailableSlotsQuery
+            {
+                Date = date,
+                ServiceId = serviceId,
+                StaffId = staffId,
+                StepMinutes = stepMinutes
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
     }
 }

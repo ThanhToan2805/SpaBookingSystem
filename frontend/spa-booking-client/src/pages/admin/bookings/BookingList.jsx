@@ -312,8 +312,7 @@ export default function BookingList() {
         {[
           { id: "all", label: "Tất cả" },
           { id: "user", label: "Theo khách hàng" },
-          { id: "date", label: "Theo ngày" },
-          { id: "calendar", label: "Calendar view" },
+          { id: "calendar", label: "Theo khoảng" },
         ].map((m) => (
           <button
             key={m.id}

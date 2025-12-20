@@ -25,16 +25,20 @@ export default function StaffDashboard() {
   const [isAvailable, setIsAvailable] = useState(null);
   const [toggling, setToggling] = useState(false);
 
-  // Range để xem tổng quan (default: tuần hiện tại)
+  // Range để xem tổng quan (default: từ -10 ngày đến +10 ngày)
   const today = useMemo(() => new Date(), []);
+
   const [from, setFrom] = useState(() => {
     const d = new Date();
-    // Lấy thứ 2 đầu tuần
-    const day = d.getDay() || 7;
-    if (day !== 1) d.setDate(d.getDate() - (day - 1));
+    d.setDate(d.getDate() - 10);
     return toDateInputValue(d);
   });
-  const [to, setTo] = useState(() => toDateInputValue(today));
+
+  const [to, setTo] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 10);
+    return toDateInputValue(d);
+  });
 
   // Ngày xem chi tiết lịch + booking
   const [selectedDate, setSelectedDate] = useState(() =>
@@ -165,7 +169,7 @@ export default function StaffDashboard() {
     if (staff && from && to) {
       loadOverview();
     }
-  }, [staff]);
+  }, [staff, from, to]);
 
   // Load schedule + bookings cho ngày selectedDate
   const loadTodayData = async () => {
@@ -450,7 +454,7 @@ export default function StaffDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             <div className="bg-slate-50 rounded-xl p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-500">Tổng giờ làm</p>
+                <p className="text-xs text-slate-500">Tổng giờ phục vụ</p>
                 <p className="text-2xl font-semibold text-slate-900">
                   {overview.totalHours.toFixed(1)} giờ
                 </p>

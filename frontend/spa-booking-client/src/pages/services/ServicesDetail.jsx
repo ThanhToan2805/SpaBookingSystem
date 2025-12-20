@@ -73,7 +73,7 @@ export default function ServicesDetail() {
               <h3 className="text-2xl font-bold text-gray-800">
                 Vì sao bạn sẽ yêu thích dịch vụ này?
               </h3>
-              <ul className="list-disc pl-6 text-gray-600 leading-relaxed">
+              <ul className="list-none pl-6 text-gray-600 leading-relaxed">
                 <li>Đội ngũ kỹ thuật viên chuyên nghiệp, được đào tạo bài bản.</li>
                 <li>Môi trường sang trọng, thư giãn, chuẩn spa cao cấp.</li>
                 <li>Đặt lịch dễ dàng, không cần chờ đợi.</li>
